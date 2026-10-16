@@ -1,0 +1,20 @@
+/* Dev-only styles for styleguide.html */
+
+.sg-hero { padding-top: calc(var(--nav-height) + var(--space-16)); background: var(--gradient-brand-soft); }
+.sg-title { font-size: var(--text-3xl); }
+.sg-lead { max-width: var(--width-prose); font-size: var(--text-md); }
+.sg-inline { grid-template-columns: auto 200px; align-items: center; }
+
+.sg-swatches { --grid-min: 150px; --grid-gap: var(--space-3); }
+.sg-swatch { display: grid; gap: var(--space-2); font-size: var(--text-xs); }
+.sg-swatch__chip { height: 64px; border-radius: var(--radius-md); border: 1px solid var(--color-border); background: var(--swatch); }
+.sg-swatch code { font-family: var(--font-mono); color: var(--color-muted); }
+
+.sg-t3xl { font: var(--weight-bold) var(--text-3xl) / var(--leading-tight) var(--font-display); }
+.sg-t2xl { font: var(--weight-bold) var(--text-2xl) / var(--leading-tight) var(--font-display); }
+.sg-txl { font: var(--weight-bold) var(--text-xl) / var(--leading-tight) var(--font-display); }
+.sg-tlg { font: var(--weight-semibold) var(--text-lg) / var(--leading-snug) var(--font-display); }
+
+.sg-stats { --grid-min: 180px; }
+.sg-games { --grid-min: 180px; }
+.sg-float { --avatar-size: 160px; }

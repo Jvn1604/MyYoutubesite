@@ -18,5 +18,10 @@
     "netlify-cli": "^27.12.1",
     "vite": "^6.4.4",
     "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/noto-sans-tamil": "^5.3.0",
+    "@fontsource/rajdhani": "^5.3.0"
   }
 }

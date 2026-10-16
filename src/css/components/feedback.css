@@ -1,0 +1,103 @@
+/* Progress, skeletons, empty/error states, toasts */
+
+/* ---- Progress bar ---- */
+.progress {
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+.progress__fill {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: var(--gradient-brand);
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  transition: transform calc(1400ms * var(--motion-scale)) var(--ease-out);
+}
+
+/* ---- Skeleton ---- */
+.skeleton {
+  display: block;
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-text) 6%, transparent), transparent)
+      0 0 / 200% 100% no-repeat,
+    var(--color-surface-elevated);
+  animation: shimmer 1.4s linear infinite;
+}
+.skeleton--text { height: 0.9em; margin-block: 0.25em; }
+.skeleton--title { height: 1.4em; width: 70%; }
+.skeleton--media { aspect-ratio: var(--ratio, 16 / 9); border-radius: 0; }
+.skeleton--circle { border-radius: var(--radius-round); aspect-ratio: 1; }
+[aria-busy="true"] > .skeleton { pointer-events: none; }
+
+/* ---- Empty / error state ---- */
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  color: var(--color-muted);
+}
+.empty__icon { width: 40px; height: 40px; color: var(--color-faint); }
+.empty__title { color: var(--color-text); font-size: var(--text-lg); }
+.empty--error { border-color: color-mix(in oklab, var(--color-error) 40%, transparent); }
+.empty--error .empty__icon { color: var(--color-error); }
+
+/* ---- Inline alert ---- */
+.alert {
+  --alert-fg: var(--color-info);
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklab, var(--alert-fg) 35%, transparent);
+  background: color-mix(in oklab, var(--alert-fg) 10%, transparent);
+  font-size: var(--text-sm);
+}
+.alert--success { --alert-fg: var(--color-success); }
+.alert--warning { --alert-fg: var(--color-warning); }
+.alert--error { --alert-fg: var(--color-error); }
+.alert__icon { flex: none; color: var(--alert-fg); font-weight: var(--weight-bold); }
+
+/* ---- Toasts (see js/ui/toast.js) ---- */
+.toast-region {
+  position: fixed;
+  z-index: var(--z-toast);
+  right: var(--space-4);
+  bottom: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  width: min(380px, calc(100vw - 2 * var(--space-4)));
+  pointer-events: none;
+}
+.toast-live { display: grid; gap: var(--space-3); }
+.toast {
+  --toast-fg: var(--color-info);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--toast-fg);
+  background: var(--color-surface-elevated);
+  box-shadow: var(--shadow-elevated);
+  font-size: var(--text-sm);
+  pointer-events: auto;
+  animation: toast-in var(--duration-normal) var(--ease-out);
+}
+.toast[data-leaving] { animation: toast-out var(--duration-fast) ease-in forwards; }
+.toast--success { --toast-fg: var(--color-success); }
+.toast--warning { --toast-fg: var(--color-warning); }
+.toast--error { --toast-fg: var(--color-error); }
+.toast__icon { flex: none; color: var(--toast-fg); font-weight: var(--weight-bold); }
+.toast__msg { flex: 1; padding-top: 1px; }
+.toast__close { flex: none; color: var(--color-muted); padding: 0 var(--space-1); }
+.toast__close:hover { color: var(--color-text); }

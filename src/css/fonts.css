@@ -1,0 +1,5 @@
+/* Self-hosted fonts (bundled by Vite, unicode-range subsets load on demand) */
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource/rajdhani/600.css";
+@import "@fontsource/rajdhani/700.css";
+@import "@fontsource-variable/noto-sans-tamil/wght.css";

@@ -1,0 +1,214 @@
+<!doctype html>
+<!-- Dev-only design system reference. Not part of the production build (see vite.config.js). -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Design System | DePhantom</title>
+  <link rel="stylesheet" href="/src/css/core.css">
+  <link rel="stylesheet" href="/src/css/styleguide.css">
+  <script type="module" src="/src/js/styleguide.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="site-nav" aria-label="Primary">
+    <div class="container site-nav__inner">
+      <a class="brand" href="#top">
+        <img class="avatar brand__logo" src="/src/assets/fallback/avatar.svg" alt="" width="38" height="38">
+        <span>DePhantom <span class="brand__ta" lang="ta">தமிழ்</span></span>
+      </a>
+      <div class="nav-links" id="sg-menu">
+        <a class="nav-link" href="#colors">Colours</a>
+        <a class="nav-link" href="#type">Type</a>
+        <a class="nav-link" href="#buttons">Buttons</a>
+        <a class="nav-link" href="#cards">Cards</a>
+        <a class="nav-link" href="#forms">Forms</a>
+        <a class="nav-link" href="#feedback">Feedback</a>
+        <a class="nav-link" href="#motion">Motion</a>
+        <a class="btn btn--youtube nav-links__cta" href="#top">Subscribe</a>
+      </div>
+      <a class="btn btn--youtube btn--sm nav-cta" href="#top">Subscribe</a>
+      <button class="icon-btn nav-toggle" type="button" aria-expanded="false" aria-controls="sg-menu" aria-label="Open menu" data-icon="menu"></button>
+    </div>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <header class="section sg-hero" id="top">
+      <div class="container stack">
+        <span class="pill pill--live" data-enter><span class="pill__dot"></span>LIVE NOW · 1.2K watching</span>
+        <h1 class="sg-title" data-enter="1">DePhantom <span class="text-gradient" lang="ta">தமிழ்</span></h1>
+        <p class="text-soft sg-lead" data-enter="2">Design system reference: tokens, components and motion. Every page in the site and admin is built only from these pieces.</p>
+        <div class="cluster" data-enter="3">
+          <label class="switch"><input type="checkbox" id="sg-motion"> Reduce motion</label>
+          <label class="field sg-inline">
+            <span class="field__label">Theme preset</span>
+            <select class="select" id="sg-preset">
+              <option value="phantom">Phantom Purple</option>
+              <option value="blood">Blood Red</option>
+              <option value="abyss">Abyss</option>
+              <option value="minimal">Minimal Dark</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <section class="section section--alt" id="colors">
+      <div class="container">
+        <div class="section-header"><p class="eyebrow">Tokens</p><h2 class="section-header__title">Colours</h2></div>
+        <div class="auto-grid sg-swatches" data-stagger></div>
+      </div>
+    </section>
+
+    <section class="section" id="type">
+      <div class="container stack stack--lg">
+        <div class="section-header"><p class="eyebrow">Tokens</p><h2 class="section-header__title">Typography</h2></div>
+        <p class="sg-t3xl">Display 3XL: Brutal Bosses</p>
+        <p class="sg-t2xl">Display 2XL: Legendary Journeys</p>
+        <p class="sg-txl">Display XL: <span lang="ta">வணக்கம் நண்பர்களே!</span></p>
+        <p class="sg-tlg">Heading LG: Phantom Troupe</p>
+        <p>Body: Soulslike, action RPGs and the newest big releases, streamed live with Tamil commentary.</p>
+        <p class="text-sm text-muted">Small muted: 1.3K views · 14 Oct 2026</p>
+        <p class="eyebrow">Eyebrow label</p>
+        <p><a class="link" href="#type">Inline link style</a></p>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="buttons">
+      <div class="container stack stack--lg">
+        <div class="section-header"><p class="eyebrow">Components</p><h2 class="section-header__title">Buttons, badges, chips</h2></div>
+        <div class="cluster">
+          <button class="btn btn--primary" type="button" data-icon-left="play">Watch Latest</button>
+          <button class="btn btn--youtube" type="button" data-icon-left="youtube">Watch Live</button>
+          <button class="btn btn--ghost" type="button" data-icon-left="discord">Join Discord</button>
+          <button class="btn btn--danger" type="button">Delete</button>
+          <button class="btn btn--text" type="button">Text button</button>
+          <button class="btn btn--primary" type="button" aria-busy="true">Saving</button>
+          <button class="btn btn--ghost" type="button" disabled>Disabled</button>
+        </div>
+        <div class="cluster">
+          <button class="btn btn--primary btn--sm" type="button">Small</button>
+          <button class="btn btn--primary btn--lg" type="button">Large</button>
+          <button class="icon-btn tooltip" type="button" data-tip="Icon button with tooltip" aria-label="Refresh" data-icon="refresh"></button>
+        </div>
+        <div class="cluster">
+          <span class="badge badge--live">Live</span>
+          <span class="badge badge--upcoming">Upcoming</span>
+          <span class="badge badge--published">Published</span>
+          <span class="badge badge--hidden">Hidden</span>
+          <span class="badge badge--featured">Featured</span>
+          <span class="badge badge--synced">Synced</span>
+          <span class="badge badge--error">Error</span>
+          <span class="pill"><span class="pill__dot"></span>NEXT STREAM · Tonight 9:00 PM MYT</span>
+        </div>
+        <div class="cluster" role="group" aria-label="Filter content">
+          <button class="chip" type="button" aria-pressed="true">All <span class="chip__count">434</span></button>
+          <button class="chip" type="button" aria-pressed="false">Videos</button>
+          <button class="chip" type="button" aria-pressed="false">Livestreams</button>
+          <button class="chip" type="button" aria-pressed="false">Shorts</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cards">
+      <div class="container stack stack--lg">
+        <div class="section-header"><p class="eyebrow">Components</p><h2 class="section-header__title">Cards</h2></div>
+        <div class="auto-grid sg-stats" data-stagger="scale">
+          <div class="card stat"><span class="stat__value text-gradient" data-count="1352">1,352</span><span class="stat__label">Subscribers</span></div>
+          <div class="card stat"><span class="stat__value text-gradient" data-count="219369">219K</span><span class="stat__label">Total views</span></div>
+          <div class="card stat"><span class="stat__value text-gradient" data-count="434">434</span><span class="stat__label">Videos</span></div>
+          <div class="card stat"><span class="stat__value text-gradient" data-count="490">490</span><span class="stat__label">Livestreams</span></div>
+        </div>
+        <div class="auto-grid" id="sg-videos" data-stagger></div>
+        <div class="auto-grid sg-games" id="sg-games" data-stagger></div>
+        <div class="auto-grid" id="sg-socials" data-stagger></div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="forms">
+      <div class="container container--narrow stack stack--lg">
+        <div class="section-header"><p class="eyebrow">Components</p><h2 class="section-header__title">Forms</h2></div>
+        <form class="card stack" id="sg-form" novalidate>
+          <label class="field">
+            <span class="field__label">Hero heading</span>
+            <input class="input" name="heading" value="DePhantom">
+          </label>
+          <label class="field">
+            <span class="field__label">Game status</span>
+            <select class="select" name="status"><option>Currently Playing</option><option>Completed</option><option>Upcoming</option><option>Dropped</option><option>Favourite</option></select>
+          </label>
+          <label class="field">
+            <span class="field__label">Website description</span>
+            <textarea class="textarea" name="desc" aria-describedby="desc-hint">Day-one Tamil playthrough.</textarea>
+            <span class="field__hint" id="desc-hint">Shown on the website only. YouTube is not changed.</span>
+          </label>
+          <label class="field">
+            <span class="field__label">Discord URL</span>
+            <input class="input" name="url" value="not-a-url" aria-invalid="true" aria-describedby="url-err">
+            <span class="field__error" id="url-err">Enter a valid https:// link.</span>
+          </label>
+          <div class="input-group" data-icon-prefix="search">
+            <label class="visually-hidden" for="sg-search">Search videos</label>
+            <input class="input" id="sg-search" type="search" placeholder="Search videos…">
+          </div>
+          <div class="cluster">
+            <label class="check"><input type="checkbox" checked> Featured</label>
+            <label class="switch"><input type="checkbox" checked> Section enabled</label>
+            <span class="color-input"><input type="color" value="#a855f7" aria-label="Primary accent"> <span class="text-sm text-muted">Primary accent</span></span>
+          </div>
+          <div class="cluster cluster--between">
+            <button class="btn btn--ghost" type="button" data-demo="confirm">Delete game…</button>
+            <button class="btn btn--primary" type="submit">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="feedback">
+      <div class="container stack stack--lg">
+        <div class="section-header"><p class="eyebrow">Components</p><h2 class="section-header__title">Feedback &amp; overlays</h2></div>
+        <div class="cluster">
+          <button class="btn btn--ghost" type="button" data-demo="toast-success">Success toast</button>
+          <button class="btn btn--ghost" type="button" data-demo="toast-warning">Warning toast</button>
+          <button class="btn btn--ghost" type="button" data-demo="toast-error">Error toast</button>
+          <button class="btn btn--ghost" type="button" data-demo="modal">Open modal</button>
+          <button class="btn btn--ghost" type="button" data-demo="video">Video modal</button>
+        </div>
+        <div class="card stack" id="sg-goal">
+          <div class="cluster cluster--between"><strong>Road to 1,652 subscribers</strong><span class="text-sm text-muted">45%</span></div>
+          <div class="progress" role="progressbar" aria-label="Subscriber goal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="45"><div class="progress__fill"></div></div>
+        </div>
+        <div class="alert alert--warning"><span class="alert__icon" aria-hidden="true">⚠</span><span>YouTube sync failed 12 minutes ago. Showing the last saved data.</span></div>
+        <div class="auto-grid">
+          <div class="card card--flush" aria-busy="true" aria-label="Loading video">
+            <span class="skeleton skeleton--media"></span>
+            <div class="video-card__body"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span></div>
+          </div>
+          <div class="empty"><span data-icon="inbox" class="empty__icon"></span><p class="empty__title">No streams yet</p><p class="text-sm">Once YouTube sync runs, streams appear here automatically.</p></div>
+          <div class="empty empty--error"><span data-icon="alert" class="empty__icon"></span><p class="empty__title">Couldn't load videos</p><button class="btn btn--ghost btn--sm" type="button">Try again</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="motion">
+      <div class="container stack stack--lg">
+        <div class="section-header"><p class="eyebrow">Motion</p><h2 class="section-header__title">Reveal variants</h2></div>
+        <div class="auto-grid">
+          <div class="card" data-reveal="fade-up">fade-up</div>
+          <div class="card" data-reveal="scale">scale</div>
+          <div class="card" data-reveal="slide-left">slide-left</div>
+          <div class="card" data-reveal="slide-right">slide-right</div>
+          <div class="card" data-reveal="fade">fade</div>
+        </div>
+        <div class="cluster">
+          <img class="avatar avatar--ring sg-float anim-float" src="/src/assets/fallback/avatar.svg" alt="Floating avatar example" width="160" height="160">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <button class="icon-btn to-top" type="button" aria-label="Back to top" data-icon="arrowUp"></button>
+</body>
+</html>

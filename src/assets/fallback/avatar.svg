@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="DePhantom">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a855f7"/>
+      <stop offset="1" stop-color="#e04bff"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" fill="#0a0a0f"/>
+  <path d="M30 34h38c14 0 22 8 22 19s-8 19-22 19H52l-6 14H30l14-32h22c5 0 8-2 8-5s-3-5-8-5H24z" fill="#f5f5fa"/>
+  <text x="60" y="102" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="13" letter-spacing="1.5" fill="url(#g)">PHANTOM</text>
+</svg>
