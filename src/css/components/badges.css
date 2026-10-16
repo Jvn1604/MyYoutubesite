@@ -29,8 +29,9 @@
   height: 7px;
   border-radius: var(--radius-round);
   background: var(--color-live);
-  animation: live-pulse 1.6s ease-out infinite;
+  animation: live-blink 1.6s ease-in-out infinite;
 }
+@keyframes live-blink { 50% { opacity: 0.35; } }
 .badge--upcoming { --badge-fg: var(--color-warning); }
 .badge--published, .badge--synced { --badge-fg: var(--color-success); }
 .badge--hidden { --badge-fg: var(--color-muted); }
@@ -58,12 +59,23 @@
   color: #ffb3b3;
 }
 .pill__dot {
+  position: relative;
   width: 8px;
   height: 8px;
+  flex: none;
   border-radius: var(--radius-round);
   background: currentColor;
 }
-.pill--live .pill__dot { background: var(--color-live); animation: live-pulse 1.6s ease-out infinite; }
+.pill--live .pill__dot { background: var(--color-live); color: var(--color-live); }
+/* Expanding ring (transform + opacity only) */
+.pill--live .pill__dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  animation: ring 1.6s var(--ease-out) infinite;
+}
 
 /* Filter chips: <div role="tablist"> or a group of aria-pressed buttons */
 .chip {

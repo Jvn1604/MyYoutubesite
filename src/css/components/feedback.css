@@ -20,12 +20,17 @@
 
 /* ---- Skeleton ---- */
 .skeleton {
+  position: relative;
   display: block;
+  overflow: hidden;
   border-radius: var(--radius-sm);
-  background:
-    linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-text) 6%, transparent), transparent)
-      0 0 / 200% 100% no-repeat,
-    var(--color-surface-elevated);
+  background: var(--color-surface-elevated);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-text) 7%, transparent), transparent);
   animation: shimmer 1.4s linear infinite;
 }
 .skeleton--text { height: 0.9em; margin-block: 0.25em; }

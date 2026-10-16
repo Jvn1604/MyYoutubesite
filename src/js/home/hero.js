@@ -4,6 +4,7 @@ import { formatNumber } from "../core/format.js";
 import { resolveNextStream, relativeDayLabel, formatTimeIn, viewerTimeZone } from "../core/time.js";
 import { countdownMarkup } from "../ui/countdown.js";
 import { ctaButton } from "./templates.js";
+import { motionAllowed, hasFinePointer } from "../core/motion.js";
 
 export function nextStreamFor(data, now = new Date()) {
   const { schedule, live } = data;
@@ -53,6 +54,8 @@ export function renderHero(root, data) {
   });
   render($('[data-slot="hero-ctas"]', root), ctas);
 
+  $(".hero", root)?.toggleAttribute("data-live", live.state === "live");
+
   const bg = $('[data-bind="heroBg"]', root);
   const bgUrl = settings.hero.backgroundUrl || channel?.bannerUrl;
   if (bg && bgUrl) {
@@ -65,14 +68,37 @@ export function renderHero(root, data) {
 /** Gentle parallax on the hero background (transform only, rAF-throttled, off for reduced motion). */
 export function initHeroParallax(root) {
   const bg = $(".hero__bg", root);
-  if (!bg || matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.dataset.motion === "off") return;
+  if (!bg) return;
   let ticking = false;
   addEventListener("scroll", () => {
-    if (ticking) return;
+    if (ticking || !motionAllowed()) return;
     ticking = true;
     requestAnimationFrame(() => {
       if (scrollY < innerHeight * 1.2) bg.style.transform = `translate3d(0, ${scrollY * 0.25}px, 0)`;
       ticking = false;
     });
   }, { passive: true });
+}
+
+/**
+ * Subtle depth: the avatar drifts a few pixels toward the mouse.
+ * Mouse/trackpad only, rAF-throttled, writes two CSS variables (no layout work).
+ */
+export function initHeroDepth(root) {
+  const hero = $(".hero", root);
+  if (!hero || !hasFinePointer()) return;
+  let frame = 0;
+  hero.addEventListener("pointermove", (e) => {
+    if (frame || !motionAllowed()) return;
+    frame = requestAnimationFrame(() => {
+      const r = hero.getBoundingClientRect();
+      hero.style.setProperty("--px", (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
+      hero.style.setProperty("--py", (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
+      frame = 0;
+    });
+  });
+  hero.addEventListener("pointerleave", () => {
+    hero.style.setProperty("--px", "0");
+    hero.style.setProperty("--py", "0");
+  });
 }

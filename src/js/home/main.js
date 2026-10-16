@@ -11,7 +11,8 @@ import { initReveal } from "../ui/reveal.js";
 import { initCountdowns } from "../ui/countdown.js";
 import { applyAppearance } from "./theme.js";
 import { applySections, bindSettings } from "./sections.js";
-import { renderHero, initHeroParallax } from "./hero.js";
+import { renderHero, initHeroParallax, initHeroDepth } from "./hero.js";
+import { pauseWhenOffscreen } from "../core/motion.js";
 import { renderStats } from "./stats.js";
 import { renderLatest, renderFeatured, initPlayButtons } from "./latest.js";
 import { renderGames, markSelectedGame } from "./games.js";
@@ -108,6 +109,8 @@ async function main() {
   initTracking();
   initPlayButtons(document);
   initHeroParallax(document);
+  initHeroDepth(document);
+  pauseWhenOffscreen(document);
 
   const { ok, data } = await api(siteUrl());
   if (!ok || !data?.settings) {

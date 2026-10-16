@@ -77,7 +77,7 @@
 .admin-sync { text-decoration: none; }
 .admin-main { padding: var(--space-8) var(--gutter) var(--space-16); max-width: 1280px; width: 100%; display: grid; gap: var(--space-6); align-content: start; }
 .admin-main:focus { outline: none; }
-.admin-view { display: grid; gap: var(--space-6); align-content: start; min-width: 0; }
+.admin-view { display: grid; gap: var(--space-6); align-content: start; min-width: 0; animation: appear var(--duration-normal) var(--ease-out); }
 /* Grid items default to min-width:auto, which lets wide tables stretch the page; let them shrink so .table-wrap scrolls */
 .admin-view > *, .panel > *, .dash-grid > * { min-width: 0; }
 

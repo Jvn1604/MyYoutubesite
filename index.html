@@ -42,7 +42,7 @@
     <!-- Sections are re-ordered / hidden at runtime from settings.sections -->
     <div id="sections">
 
-      <header class="hero" id="top" data-section="hero">
+      <header class="hero" id="top" data-section="hero" data-pause-offscreen>
         <div class="hero__bg" aria-hidden="true"><img class="hero__bg-img" alt="" data-bind="heroBg" referrerpolicy="no-referrer" fetchpriority="low" hidden></div>
         <div class="container hero__inner">
           <div class="hero__copy">
@@ -79,7 +79,7 @@
         </div>
       </section>
 
-      <section class="section" id="latest" data-section="latest" aria-labelledby="latest-title">
+      <section class="section" id="latest" data-section="latest" data-pause-offscreen aria-labelledby="latest-title">
         <div class="container">
           <div class="section-header" data-reveal="fade-up">
             <p class="eyebrow">Fresh from the channel</p>
@@ -91,12 +91,12 @@
           </div>
           <div class="latest__featured" data-featured-block hidden>
             <h3 class="eyebrow latest__featured-title">Featured by DePhantom</h3>
-            <div class="auto-grid video-grid" data-slot="featured"></div>
+            <div class="auto-grid video-grid" data-slot="featured" data-stagger></div>
           </div>
         </div>
       </section>
 
-      <section class="section section--alt" id="streams" data-section="streams" aria-labelledby="streams-title">
+      <section class="section section--alt" id="streams" data-section="streams" data-pause-offscreen aria-labelledby="streams-title">
         <div class="container">
           <div class="section-header section-header--row" data-reveal="fade-up">
             <div class="stack stack--sm">
@@ -105,7 +105,7 @@
             </div>
             <a class="btn btn--ghost btn--sm" href="https://www.youtube.com/@ImDePhantom/streams" target="_blank" rel="noopener" data-link="streams">All streams on YouTube</a>
           </div>
-          <div class="auto-grid video-grid" data-slot="streams" data-skeleton-cards="6"></div>
+          <div class="auto-grid video-grid" data-slot="streams" data-skeleton-cards="6" data-stagger></div>
         </div>
       </section>
 
@@ -117,11 +117,11 @@
             <p class="section-header__sub">Soulslike and action RPGs, plus day-one coverage of the biggest new releases. Pick a game to see its videos.</p>
           </div>
           <div class="cluster games__filters" role="group" aria-label="Filter games by status" data-slot="game-filters"></div>
-          <div class="auto-grid games__grid" data-slot="games" data-skeleton-cards="5" data-skeleton-cover></div>
+          <div class="auto-grid games__grid" data-slot="games" data-skeleton-cards="5" data-skeleton-cover data-stagger="scale"></div>
         </div>
       </section>
 
-      <section class="section section--alt" id="schedule" data-section="schedule" aria-labelledby="schedule-title">
+      <section class="section section--alt" id="schedule" data-section="schedule" data-pause-offscreen aria-labelledby="schedule-title">
         <div class="container">
           <div class="section-header" data-reveal="fade-up">
             <p class="eyebrow">When to find me</p>
@@ -139,7 +139,7 @@
         <div class="container container--narrow" data-slot="goal"></div>
       </section>
 
-      <section class="section" id="videos" data-section="videos" aria-labelledby="videos-title">
+      <section class="section" id="videos" data-section="videos" data-pause-offscreen aria-labelledby="videos-title">
         <div class="container">
           <div class="section-header" data-reveal="fade-up">
             <p class="eyebrow">Browse everything</p>
@@ -158,7 +158,7 @@
           </form>
           <div data-slot="library-game"></div>
           <p class="library__status text-sm text-muted" aria-live="polite" data-slot="library-status"></p>
-          <div class="auto-grid video-grid" data-slot="library" data-skeleton-cards="6"></div>
+          <div class="auto-grid video-grid" data-slot="library" data-skeleton-cards="6" data-appear></div>
           <div class="center library__more"><button class="btn btn--ghost" type="button" data-slot="library-more" hidden>Load more</button></div>
         </div>
       </section>

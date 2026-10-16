@@ -9,14 +9,18 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fade-in { from { opacity: 0; } }
-@keyframes shimmer { to { background-position: -200% 0, 0 0; } }
-@keyframes live-pulse {
-  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-live) 70%, transparent); }
-  70% { box-shadow: 0 0 0 8px transparent; }
-  100% { box-shadow: 0 0 0 0 transparent; }
-}
+/* Skeleton sheen: a pseudo-element slides across (transform only, no repaint per frame) */
+@keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+/* Live indicator: an expanding, fading ring on a pseudo-element */
+@keyframes ring { from { transform: scale(1); opacity: 0.7; } to { transform: scale(2.6); opacity: 0; } }
 @keyframes float { 50% { transform: translateY(calc(-12px * var(--motion-scale))); } }
-@keyframes gradient-pan { to { background-position: 200% 50%; } }
+/* Slow ambient drift for background glows */
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(calc(4% * var(--motion-scale)), calc(-3% * var(--motion-scale)), 0) scale(calc(1 + 0.06 * var(--motion-scale))); }
+}
+/* Content replacing a skeleton */
+@keyframes appear { from { opacity: 0; transform: translateY(calc(8px * var(--motion-scale))); } }
 @keyframes toast-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } }
 @keyframes toast-out { to { opacity: 0; transform: translateX(24px); } }
 @keyframes modal-in { from { opacity: 0; transform: translateY(16px) scale(0.98); } }
@@ -49,10 +53,30 @@
 
 /* ---- Utility motions ---- */
 .anim-float { animation: float 6s ease-in-out infinite; }
-.anim-gradient {
-  background-size: 200% 100%;
-  animation: gradient-pan 8s linear infinite;
+
+/* Pulsing ring for live indicators: put .live-ring on a positioned element */
+.live-ring { position: relative; }
+.live-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  animation: ring 1.6s var(--ease-out) infinite;
+  pointer-events: none;
 }
+
+/* Rendered content fades in when it replaces skeletons (js adds data-appear) */
+[data-appear] > * { animation: appear var(--duration-slow) var(--ease-out) both; }
+[data-appear] > :nth-child(2) { animation-delay: calc(40ms * var(--motion-scale)); }
+[data-appear] > :nth-child(3) { animation-delay: calc(80ms * var(--motion-scale)); }
+[data-appear] > :nth-child(4) { animation-delay: calc(120ms * var(--motion-scale)); }
+[data-appear] > :nth-child(5) { animation-delay: calc(160ms * var(--motion-scale)); }
+[data-appear] > :nth-child(n + 6) { animation-delay: calc(200ms * var(--motion-scale)); }
+
+/* Infinite animations pause when the element is off-screen (js/ui/visibility.js) */
+[data-offscreen], [data-offscreen] *, [data-offscreen] *::before, [data-offscreen] *::after,
+[data-offscreen]::before, [data-offscreen]::after { animation-play-state: paused !important; }
 
 /* Image fade-in once loaded (js sets/removes data-loading) */
 img[data-loading] { opacity: 0; }

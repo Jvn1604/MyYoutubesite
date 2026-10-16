@@ -5,14 +5,10 @@
  */
 import { $$ } from "../core/dom.js";
 import { formatNumber } from "../core/format.js";
+import { motionAllowed } from "../core/motion.js";
 
 const DURATION = 1600;
 const easeOutExpo = (t) => (t === 1 ? 1 : 1 - 2 ** (-10 * t));
-
-function motionAllowed() {
-  const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--motion-scale"));
-  return !(scale === 0 || matchMedia("(prefers-reduced-motion: reduce)").matches);
-}
 
 function animate(el) {
   const target = Number(el.dataset.count);
