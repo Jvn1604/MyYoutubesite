@@ -2,18 +2,194 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DePhantom தமிழ் | Tamil Gaming Live</title>
-  <meta name="description" content="DePhantom தமிழ் – Tamil gaming livestreams: soulslike, action RPGs and day-one releases with Tamil commentary.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>DePhantom தமிழ் | Tamil Gaming Livestreams</title>
+  <meta name="description" content="DePhantom தமிழ் – Tamil gaming livestreams: soulslike, action RPGs and day-one releases with Tamil commentary. Join the Phantom Troupe.">
   <meta name="theme-color" content="#0a0a0f">
-  <script type="module" src="/src/js/home/main.js"></script>
+  <link rel="icon" href="/src/assets/fallback/avatar.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://i.ytimg.com">
+  <script src="/boot.js"></script>
   <link rel="stylesheet" href="/src/css/core.css">
+  <link rel="stylesheet" href="/src/css/home.css">
+  <script type="module" src="/src/js/home/main.js"></script>
 </head>
 <body>
-  <main id="main">
-    <h1>DePhantom <span lang="ta">தமிழ்</span></h1>
-    <p>Site scaffold. Sections arrive in phase 6.</p>
-    <p>API status: <output id="api-status">checking…</output></p>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="site-nav" aria-label="Primary">
+    <div class="container site-nav__inner">
+      <a class="brand" href="#top" data-track="nav_home">
+        <img class="avatar brand__logo" src="/src/assets/fallback/avatar.svg" alt="" width="38" height="38" data-bind="logo">
+        <span><span data-bind="brand.name">DePhantom</span> <span class="brand__ta" lang="ta" data-bind="brand.nameTa">தமிழ்</span></span>
+      </a>
+      <div class="nav-links" id="site-menu">
+        <a class="nav-link" href="#latest" data-nav="latest">Latest</a>
+        <a class="nav-link" href="#streams" data-nav="streams">Streams</a>
+        <a class="nav-link" href="#videos" data-nav="videos">Videos</a>
+        <a class="nav-link" href="#games" data-nav="games">Games</a>
+        <a class="nav-link" href="#schedule" data-nav="schedule">Schedule</a>
+        <a class="nav-link" href="#community" data-nav="community">Community</a>
+        <a class="nav-link" href="#about" data-nav="about">About</a>
+        <a class="nav-link" href="#support" data-nav="support">Support</a>
+        <a class="btn btn--youtube nav-links__cta" href="https://www.youtube.com/@ImDePhantom?sub_confirmation=1" target="_blank" rel="noopener" data-link="subscribe" data-track="subscribe_click">Subscribe</a>
+      </div>
+      <a class="btn btn--youtube btn--sm nav-cta" href="https://www.youtube.com/@ImDePhantom?sub_confirmation=1" target="_blank" rel="noopener" data-link="subscribe" data-track="subscribe_click">Subscribe</a>
+      <button class="icon-btn nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu" data-icon="menu"></button>
+    </div>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <!-- Sections are re-ordered / hidden at runtime from settings.sections -->
+    <div id="sections">
+
+      <header class="hero" id="top" data-section="hero">
+        <div class="hero__bg" aria-hidden="true"><img class="hero__bg-img" alt="" data-bind="heroBg" referrerpolicy="no-referrer" fetchpriority="low" hidden></div>
+        <div class="container hero__inner">
+          <div class="hero__copy">
+            <div class="hero__status" data-slot="hero-status" aria-live="polite">
+              <span class="skeleton hero__status-skeleton"></span>
+            </div>
+            <h1 class="hero__title" data-enter="1">
+              <span data-bind="hero.heading">DePhantom</span>
+              <span class="hero__title-ta text-gradient" lang="ta" data-bind="hero.headingTa">தமிழ்</span>
+            </h1>
+            <p class="hero__tagline" data-enter="2" data-bind="hero.tagline">Tamil Gaming. Brutal Bosses. Legendary Journeys.</p>
+            <p class="hero__lead" data-enter="3">
+              <strong lang="ta" data-bind="brand.greetingTa">வணக்கம் நண்பர்களே!</strong>
+              <span data-bind="hero.lead">Soulslike, action RPGs and the newest big releases, streamed live with Tamil commentary.</span>
+            </p>
+            <div class="cluster hero__ctas" data-enter="4" data-slot="hero-ctas"></div>
+          </div>
+          <div class="hero__visual" data-enter="2">
+            <div class="hero__avatar-ring anim-float">
+              <img class="hero__avatar" src="/src/assets/fallback/avatar.svg" alt="DePhantom தமிழ் logo" width="320" height="320" data-bind="avatar">
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="section section--tight stats" data-section="stats" aria-label="Channel statistics">
+        <div class="container">
+          <dl class="stats__grid" data-slot="stats" data-stagger="scale">
+            <div class="card stat"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span></div>
+            <div class="card stat"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span></div>
+            <div class="card stat"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span></div>
+            <div class="card stat"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section" id="latest" data-section="latest" aria-labelledby="latest-title">
+        <div class="container">
+          <div class="section-header" data-reveal="fade-up">
+            <p class="eyebrow">Fresh from the channel</p>
+            <h2 class="section-header__title" id="latest-title">Latest</h2>
+          </div>
+          <div class="latest__grid" data-slot="latest">
+            <div class="card card--flush" aria-busy="true"><span class="skeleton skeleton--media"></span><div class="video-card__body"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span></div></div>
+            <div class="card card--flush" aria-busy="true"><span class="skeleton skeleton--media"></span><div class="video-card__body"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="streams" data-section="streams" aria-labelledby="streams-title">
+        <div class="container">
+          <div class="section-header section-header--row" data-reveal="fade-up">
+            <div class="stack stack--sm">
+              <p class="eyebrow">Missed a stream?</p>
+              <h2 class="section-header__title" id="streams-title">Recent streams</h2>
+            </div>
+            <a class="btn btn--ghost btn--sm" href="https://www.youtube.com/@ImDePhantom/streams" target="_blank" rel="noopener" data-link="streams">All streams on YouTube</a>
+          </div>
+          <div class="auto-grid video-grid" data-slot="streams" data-skeleton-cards="6"></div>
+        </div>
+      </section>
+
+      <section class="section" id="games" data-section="games" aria-labelledby="games-title">
+        <div class="container">
+          <div class="section-header" data-reveal="fade-up">
+            <p class="eyebrow">The library</p>
+            <h2 class="section-header__title" id="games-title">Games on the channel</h2>
+            <p class="section-header__sub">Soulslike and action RPGs, plus day-one coverage of the biggest new releases. Pick a game to see its videos.</p>
+          </div>
+          <div class="cluster games__filters" role="group" aria-label="Filter games by status" data-slot="game-filters"></div>
+          <div class="auto-grid games__grid" data-slot="games" data-skeleton-cards="5" data-skeleton-cover></div>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="schedule" data-section="schedule" aria-labelledby="schedule-title">
+        <div class="container">
+          <div class="section-header" data-reveal="fade-up">
+            <p class="eyebrow">When to find me</p>
+            <h2 class="section-header__title" id="schedule-title">Stream schedule</h2>
+            <p class="section-header__sub" data-slot="schedule-message"></p>
+          </div>
+          <div class="schedule__grid" data-slot="schedule">
+            <div class="card"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span><span class="skeleton skeleton--text"></span></div>
+            <div class="card"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span><span class="skeleton skeleton--text"></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--tight" id="goal" data-section="goal" aria-labelledby="goal-title">
+        <div class="container container--narrow" data-slot="goal"></div>
+      </section>
+
+      <section class="section" id="videos" data-section="videos" aria-labelledby="videos-title">
+        <div class="container">
+          <div class="section-header" data-reveal="fade-up">
+            <p class="eyebrow">Browse everything</p>
+            <h2 class="section-header__title" id="videos-title">Video library</h2>
+          </div>
+          <form class="library__controls" data-slot="library-controls" role="search" aria-label="Search and filter videos">
+            <div class="cluster" role="group" aria-label="Content type" data-slot="library-types"></div>
+            <div class="library__fields">
+              <label class="visually-hidden" for="library-game">Game</label>
+              <select class="select" id="library-game" name="game"><option value="">All games</option></select>
+              <div class="input-group" data-icon-prefix="search">
+                <label class="visually-hidden" for="library-q">Search videos</label>
+                <input class="input" id="library-q" name="q" type="search" placeholder="Search videos…" autocomplete="off" maxlength="80">
+              </div>
+            </div>
+          </form>
+          <p class="library__status text-sm text-muted" aria-live="polite" data-slot="library-status"></p>
+          <div class="auto-grid video-grid" data-slot="library" data-skeleton-cards="6"></div>
+          <div class="center library__more"><button class="btn btn--ghost" type="button" data-slot="library-more" hidden>Load more</button></div>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="community" data-section="community" aria-labelledby="community-title">
+        <div class="container">
+          <div class="section-header" data-reveal="fade-up">
+            <p class="eyebrow" data-bind="brand.community">Phantom Troupe</p>
+            <h2 class="section-header__title" id="community-title">Join the community</h2>
+            <p class="section-header__sub">Hang out between streams, get live alerts, suggest the next game.</p>
+          </div>
+          <div class="auto-grid socials__grid" data-slot="socials" data-stagger></div>
+        </div>
+      </section>
+
+      <section class="section" id="support" data-section="support" aria-labelledby="support-title">
+        <div class="container" data-slot="support"></div>
+      </section>
+
+      <section class="section section--alt" id="about" data-section="about" aria-labelledby="about-title">
+        <div class="container" data-slot="about"></div>
+      </section>
+    </div>
   </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <a class="brand" href="#top">
+        <img class="avatar brand__logo" src="/src/assets/fallback/avatar.svg" alt="" width="38" height="38" data-bind="logo">
+        <span><span data-bind="brand.name">DePhantom</span> <span class="brand__ta" lang="ta" data-bind="brand.nameTa">தமிழ்</span></span>
+      </a>
+      <nav class="cluster site-footer__links" aria-label="Footer" data-slot="footer-links"></nav>
+      <p class="text-sm text-muted">© <span data-slot="year"></span> <span data-bind="brand.name">DePhantom</span> தமிழ். <span data-bind="footer.text">Game on! 🎮</span></p>
+    </div>
+  </footer>
+
+  <button class="icon-btn to-top" type="button" aria-label="Back to top" data-icon="arrowUp"></button>
 </body>
 </html>

@@ -9,6 +9,7 @@
 }
 .card--elevated { background: var(--color-surface-elevated); box-shadow: var(--shadow-card); }
 .card--flush { --card-pad: 0; overflow: hidden; }
+.card-title { font-size: var(--text-lg); margin-bottom: var(--space-1); }
 .card--glow { background: var(--gradient-brand-soft), var(--color-surface); border-color: color-mix(in oklab, var(--color-primary) 35%, transparent); }
 
 .card--interactive {
