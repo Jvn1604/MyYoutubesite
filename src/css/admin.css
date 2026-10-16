@@ -1,0 +1,40 @@
+/* Admin interface. Usability first; uses the shared tokens and components. */
+
+/* Nothing admin-only renders until the session is confirmed */
+.auth-pending body > :not(.skip-link) { visibility: hidden; }
+
+/* ---------------- Login ---------------- */
+.auth-page {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: var(--space-6) var(--gutter);
+  background:
+    radial-gradient(60% 50% at 50% 0%, color-mix(in oklab, var(--color-primary) 18%, transparent), transparent 70%),
+    var(--color-bg);
+}
+.auth-card { width: min(420px, 100%); display: grid; gap: var(--space-6); --card-pad: var(--space-8); }
+.auth-card__brand { display: flex; align-items: center; gap: var(--space-4); }
+.auth-card__brand .avatar { --avatar-size: 56px; }
+.auth-card__title { font-size: var(--text-xl); }
+.auth-card__foot { text-align: center; }
+.password-field { position: relative; display: block; }
+.password-field .input { padding-right: 72px; }
+.password-field__toggle { position: absolute; right: var(--space-1); top: 50%; translate: 0 -50%; min-height: 36px; }
+
+/* ---------------- Shell (expanded in phase 11) ---------------- */
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding: var(--space-3) var(--gutter);
+  background: var(--color-surface-overlay);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+.admin-main { padding-block: var(--space-10); display: grid; gap: var(--space-4); }

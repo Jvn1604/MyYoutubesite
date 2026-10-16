@@ -1,4 +1,4 @@
-# DePhantom தமிழ் website: audit, architecture and build plan
+﻿# DePhantom தமிழ் website: audit, architecture and build plan
 
 Status: **Phases 1–3 done (audit, inventory, architecture). Waiting for the stack/hosting decision before Phase 4.**
 Source audited: `website/index.html` (single file, 30 KB, written 2026-10-16).
@@ -88,7 +88,7 @@ Source audited: `website/index.html` (single file, 30 KB, written 2026-10-16).
 | Backend | **Node.js serverless functions on Netlify** (`netlify/functions/*` thin entry points → shared `server/` controllers/services) | Netlify is the host you were already setting up. Functions keep the YouTube key server-side. **Scheduled Functions** run the sync without a server to babysit. No cold-sleeping VM (unlike Render's free tier). |
 | Database | **Supabase Postgres** (free tier) via the `postgres` driver + SQL migrations | Real relational DB with backups and a dashboard. The sync job touches it every few minutes, so the free project never idles into pause. |
 | Media | **Supabase Storage** (public bucket), uploads only through our authenticated API | 1 GB free. Image resizing/WebP is done with `sharp` in the upload function. |
-| Auth | **Own minimal single-admin auth**: bcrypt password hash in `admins`, HMAC-signed `HttpOnly; Secure; SameSite=Strict` session cookie, CSRF token header on mutating requests, login rate-limit table | One admin doesn't need an identity provider. This is small, auditable, and keeps the "browser never talks to the DB" rule. |
+| Auth | **Own minimal single-admin auth**: scrypt password hash (Node built-in) in `admins`, HMAC-signed `HttpOnly; Secure; SameSite=Strict` session cookie, CSRF token header on mutating requests, login rate-limit table | One admin doesn't need an identity provider. This is small, auditable, and keeps the "browser never talks to the DB" rule. |
 | YouTube | **YouTube Data API v3**, official endpoints only | No HTML scraping (I'll stop using the RSS/page tricks I used before). |
 
 Runs locally with `npm run dev` (`netlify dev` = Vite + functions together), against either a local Postgres or the Supabase dev project.
@@ -201,7 +201,7 @@ site_events         id, event, target, created_at   (privacy-friendly click coun
 
 - Secrets (`YOUTUBE_API_KEY`, `DATABASE_URL`, `SESSION_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`) live only in Netlify env vars and are never sent to the browser.
 - Every admin route: session check → CSRF header check → zod validation → parameterised SQL.
-- Login: bcrypt (cost 12), 5 attempts per 15 min per IP, generic error messages.
+- Login: scrypt (N=2^15), 5 failed attempts per 15 min per IP, generic error messages.
 - Uploads: MIME sniffing (not the file extension), 5 MB cap, re-encoded with sharp (this strips EXIF and anything malicious), WebP + AVIF variants.
 - Output escaping everywhere on the frontend (`textContent` / a single `html` tagged template that escapes). Strict CSP headers via `netlify.toml`.
 

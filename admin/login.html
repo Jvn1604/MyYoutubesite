@@ -5,12 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Sign in | DePhantom Admin</title>
+  <link rel="icon" href="/src/assets/fallback/avatar.svg" type="image/svg+xml">
+  <script src="/boot.js"></script>
   <link rel="stylesheet" href="/src/css/core.css">
+  <link rel="stylesheet" href="/src/css/admin.css">
+  <script type="module" src="/src/js/admin/login.js"></script>
 </head>
-<body>
-  <main id="main">
-    <h1>Admin sign in</h1>
-    <p>Login scaffold. Authentication arrives in phase 10.</p>
+<body class="auth-page">
+  <main id="main" class="auth-card card card--elevated">
+    <div class="auth-card__brand">
+      <img class="avatar avatar--ring" src="/src/assets/fallback/avatar.svg" alt="" width="64" height="64">
+      <div>
+        <p class="eyebrow">DePhantom <span lang="ta">தமிழ்</span></p>
+        <h1 class="auth-card__title">Admin sign in</h1>
+      </div>
+    </div>
+
+    <div class="alert alert--error" role="alert" data-slot="error" hidden>
+      <span class="alert__icon" aria-hidden="true">!</span><span data-slot="error-text"></span>
+    </div>
+
+    <form class="stack" id="login-form" novalidate>
+      <label class="field">
+        <span class="field__label">Email</span>
+        <input class="input" type="email" name="email" autocomplete="username" required maxlength="254" autofocus>
+      </label>
+      <label class="field">
+        <span class="field__label">Password</span>
+        <span class="password-field">
+          <input class="input" type="password" name="password" autocomplete="current-password" required maxlength="256">
+          <button class="btn btn--text btn--sm password-field__toggle" type="button" aria-pressed="false" data-toggle-password>Show</button>
+        </span>
+      </label>
+      <button class="btn btn--primary btn--block btn--lg" type="submit">Sign in</button>
+    </form>
+
+    <p class="text-xs text-muted auth-card__foot"><a class="link" href="/">← Back to the website</a></p>
   </main>
 </body>
 </html>

@@ -1,17 +1,32 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="auth-pending">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Dashboard | DePhantom Admin</title>
-  <script type="module" src="/src/js/admin/main.js"></script>
+  <link rel="icon" href="/src/assets/fallback/avatar.svg" type="image/svg+xml">
+  <script src="/boot.js"></script>
   <link rel="stylesheet" href="/src/css/core.css">
+  <link rel="stylesheet" href="/src/css/admin.css">
+  <script type="module" src="/src/js/admin/main.js"></script>
 </head>
-<body>
-  <main id="main">
-    <h1>DePhantom Admin</h1>
-    <p>Admin scaffold. The dashboard arrives in phase 11.</p>
+<body class="admin">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="admin-topbar">
+    <a class="brand" href="/admin/">
+      <img class="avatar brand__logo" src="/src/assets/fallback/avatar.svg" alt="" width="38" height="38">
+      <span>DePhantom <span class="brand__ta">Admin</span></span>
+    </a>
+    <div class="cluster">
+      <span class="text-sm text-muted" data-slot="admin-email"></span>
+      <a class="btn btn--ghost btn--sm" href="/" target="_blank" rel="noopener">View website</a>
+      <button class="btn btn--ghost btn--sm" type="button" data-action="logout">Log out</button>
+    </div>
+  </header>
+  <main id="main" class="admin-main container" tabindex="-1">
+    <h1 class="section-header__title">Welcome back</h1>
+    <p class="text-soft">You're signed in. The full dashboard arrives in phase 11.</p>
   </main>
 </body>
 </html>
