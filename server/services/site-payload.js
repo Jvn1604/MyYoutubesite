@@ -10,7 +10,9 @@ const thumbs = (id) => ({
   maxres: `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
 });
 
-const byNewest = (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt);
+const withoutKeys = (obj, keys) => Object.fromEntries(Object.entries(obj).filter(([k]) => !keys.includes(k)));
+
+const byNewest =(a, b) => new Date(b.publishedAt) - new Date(a.publishedAt);
 
 /** Row → public Video DTO. `gameIndex` maps slug → game row. */
 export function toVideoDto(row, gameIndex) {
@@ -71,7 +73,7 @@ export function buildSitePayload({ settings, channel, videos, games, schedule, g
 
   return {
     generatedAt: new Date(now).toISOString(),
-    settings: { ...settings, sections: settings.sections.filter((s) => s.enabled) },
+    settings: { ...withoutKeys(settings, ["schedule"]), sections: settings.sections.filter((s) => s.enabled) },
     channel: channel ? { ...channel, subscriberCount: channel.subscribersHidden ? null : channel.subscriberCount } : null,
     live: liveStatus(vids, now),
     latest: { upload: uploads[0] ?? null, stream: finishedStreams[0] ?? null },

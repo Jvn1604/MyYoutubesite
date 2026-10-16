@@ -27,3 +27,6 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+
+# Local PGlite database
+.data/

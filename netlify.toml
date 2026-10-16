@@ -5,6 +5,8 @@
 
 [functions]
   node_bundler = "esbuild"
+  # Local/test-only database engine; never loaded when DATABASE_URL is a postgres:// URL
+  external_node_modules = ["@electric-sql/pglite"]
 
 # `npm run dev` → Netlify CLI proxies Vite (5173) and serves functions on :8888
 [dev]
