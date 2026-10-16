@@ -8,13 +8,15 @@
  *   db.close()
  *
  * DATABASE_URL:
- *   postgres://…        → postgres.js (use Supabase's *transaction pooler* URL)
- *   pglite:memory       → throwaway in-memory database
- *   pglite:./.data/db   → persistent local database folder
+ *   postgres://…        → postgres.js (Supabase *transaction pooler* URL, or the
+ *                         local dev server from `npm run db:local`)
+ *   pglite:memory       → throwaway in-process database (unit tests)
+ *   pglite:./folder     → in-process file database; single process only, so NOT
+ *                         for `netlify dev` (each function call is a new thread)
  */
 import { requireEnv } from "../config.js";
 
-function wrapPostgres(sql) {
+function wrapPostgres(sql, { closeTimeout = 5 } = {}) {
   const api = (s) => ({
     query: (text, params = []) => s.unsafe(text, params),
     exec: (text) => s.unsafe(text),
@@ -23,7 +25,7 @@ function wrapPostgres(sql) {
     kind: "postgres",
     ...api(sql),
     transaction: (fn) => sql.begin((tx) => fn(api(tx))),
-    close: () => sql.end({ timeout: 5 }),
+    close: () => sql.end({ timeout: closeTimeout }),
   };
 }
 
@@ -51,16 +53,19 @@ export async function createDb(url = requireEnv("DATABASE_URL")) {
     return wrapPglite(new PGlite(target, options));
   }
   const { default: postgres } = await import("postgres");
+  const local = isLocalDatabase(url);
   return wrapPostgres(postgres(url, {
-    max: 3,                 // serverless: keep the pool tiny
-    idle_timeout: 20,
+    ssl: local ? false : "require", // Supabase requires TLS; the local dev server has none
+    max: 1,                 // serverless: one connection per function instance (queries queue on it)
+    // `netlify dev` runs each request in a fresh worker, so close idle local connections quickly
+    idle_timeout: local ? 2 : 20,
     connect_timeout: 10,
     prepare: false,         // required by Supabase's transaction pooler (pgbouncer)
     // int8 (counts, ids) as plain numbers: all our values are far below 2^53 and must be JSON-safe
     types: { int8: { to: 20, from: [20], parse: Number, serialize: String } },
     transform: { undefined: null },
     onnotice: () => {},
-  }));
+  }), { closeTimeout: local ? 0 : 5 }); // local: free the single server slot immediately
 }
 
 let shared;
@@ -68,4 +73,30 @@ let shared;
 export async function getDb() {
   shared ??= createDb();
   return shared;
+}
+
+/** True for the `npm run db:local` server (or any Postgres on this machine). */
+export const isLocalDatabase = (url = process.env.DATABASE_URL ?? "") => /@(localhost|127\.0\.0\.1)(:\d+)?\//.test(url);
+
+/**
+ * Run `fn(db)` with a connection suited to the environment:
+ * - production: the shared warm pool
+ * - local dev server: a short-lived connection closed right after, because the
+ *   local PGlite server serves one connection at a time (others queue)
+ */
+export async function withDb(fn) {
+  if (!isLocalDatabase()) return fn(await getDb());
+  // The local server rejects a connection while another is active: wait and retry
+  for (let attempt = 1; ; attempt++) {
+    const db = await createDb();
+    try {
+      return await fn(db);
+    } catch (err) {
+      const refused = ["ECONNRESET", "ECONNREFUSED", "CONNECTION_CLOSED", "CONNECTION_ENDED", "EPIPE"].includes(err.code);
+      if (!refused || attempt >= 40) throw err;
+      await new Promise((r) => setTimeout(r, 50 + Math.random() * 100 * Math.min(attempt, 5)));
+    } finally {
+      await db.close().catch(() => {});
+    }
+  }
 }

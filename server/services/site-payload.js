@@ -32,7 +32,8 @@ export function toVideoDto(row, gameIndex) {
     views: row.views ?? null,
     likes: row.likes ?? null,
     comments: row.comments ?? null,
-    thumbnails: row.thumbnails || thumbs(row.id),
+    // Official i.ytimg.com URLs fill any size YouTube didn't report
+    thumbnails: { ...thumbs(row.id), ...Object.fromEntries(Object.entries(row.thumbnails ?? {}).filter(([, url]) => url)) },
     game: game && !game.hidden ? { slug: game.slug, name: game.name } : null,
     featured: Boolean(row.featured),
   };
@@ -56,7 +57,8 @@ export function buildSitePayload({ settings, channel, videos, games, schedule, g
   const vids = visibleVideos(videos).map((r) => toVideoDto(r, gameIndex)).sort(byNewest);
 
   const finishedStreams = vids.filter((v) => v.kind === "stream" && v.liveState === "ended");
-  const uploads = vids.filter((v) => v.kind !== "stream");
+  // "Latest upload" headlines the newest full video; Shorts live in the library under their own filter
+  const uploads = vids.filter((v) => v.kind === "video" && v.liveState !== "upcoming");
 
   const counts = { video: 0, stream: 0, short: 0 };
   vids.forEach((v) => { counts[v.kind] = (counts[v.kind] ?? 0) + 1; });
