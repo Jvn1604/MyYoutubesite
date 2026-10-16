@@ -22,7 +22,10 @@ function gameCard(g) {
           : html`<span class="game-card__cover-fallback" aria-hidden="true">${initials(g.name)}</span>`}
       </div>
       <div class="game-card__body">
-        <span class="badge badge--solid badge--${status.badge === "live" ? "info" : status.badge}">${status.label}</span>
+        <span class="cluster game-card__badges">
+          <span class="badge badge--solid badge--${status.badge === "live" ? "info" : status.badge}">${status.label}</span>
+          ${g.featured ? html`<span class="badge badge--solid badge--featured">Featured</span>` : ""}
+        </span>
         <h3 class="game-card__title">
           <button class="card__link" type="button" data-game="${g.slug}" data-track="game_select" data-track-target="${g.slug}"
             aria-label="Show videos for ${g.name}">${g.name}</button>

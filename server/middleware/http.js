@@ -10,6 +10,18 @@ export function json(data, { status = 200, headers = {} } = {}) {
   });
 }
 
+/**
+ * Public, CDN-cached responses. Browsers must always revalidate (so visitors never see an
+ * older version than the CDN has); only Netlify's CDN keeps a copy and serves it stale
+ * while refreshing / during an outage.
+ */
+export function cdnCache(seconds, { swr = seconds * 5, staleIfError = 86400 } = {}) {
+  return {
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Netlify-CDN-Cache-Control": `public, s-maxage=${seconds}, stale-while-revalidate=${swr}, stale-if-error=${staleIfError}`,
+  };
+}
+
 export function error(status, message, extra = {}) {
   return json({ error: message, ...extra }, { status, headers: { "Cache-Control": "no-store" } });
 }

@@ -89,6 +89,10 @@
             <div class="card card--flush" aria-busy="true"><span class="skeleton skeleton--media"></span><div class="video-card__body"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span></div></div>
             <div class="card card--flush" aria-busy="true"><span class="skeleton skeleton--media"></span><div class="video-card__body"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--text"></span></div></div>
           </div>
+          <div class="latest__featured" data-featured-block hidden>
+            <h3 class="eyebrow latest__featured-title">Featured by DePhantom</h3>
+            <div class="auto-grid video-grid" data-slot="featured"></div>
+          </div>
         </div>
       </section>
 
@@ -152,6 +156,7 @@
               </div>
             </div>
           </form>
+          <div data-slot="library-game"></div>
           <p class="library__status text-sm text-muted" aria-live="polite" data-slot="library-status"></p>
           <div class="auto-grid video-grid" data-slot="library" data-skeleton-cards="6"></div>
           <div class="center library__more"><button class="btn btn--ghost" type="button" data-slot="library-more" hidden>Load more</button></div>

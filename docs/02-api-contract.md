@@ -36,7 +36,7 @@ One payload with everything the first screen needs. `Cache-Control: public, s-ma
 ```
 
 ```jsonc
-Video = { "id", "title", "description", "url", "publishedAt", "durationSeconds",
+Video = { "id", "title", "description", "note" /* admin's website-only text or null */, "url", "publishedAt", "durationSeconds",
           "kind": "video|stream|short", "liveState": "none|upcoming|live|ended",
           "scheduledStart", "actualStart", "concurrentViewers",
           "views", "likes", "comments",

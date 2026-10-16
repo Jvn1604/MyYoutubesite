@@ -1,6 +1,7 @@
 /** Video library: type chips, game select, debounced search, "Load more" pagination. */
-import { $, $$, html, render, enhanceImages } from "../core/dom.js";
+import { $, $$, html, render, enhanceImages, safeUrl } from "../core/dom.js";
 import { api } from "../core/api.js";
+import { icon } from "../ui/icons.js";
 import { videoCard, skeletonCards, emptyState, FALLBACK_THUMB } from "./templates.js";
 
 const TYPES = [
@@ -65,12 +66,32 @@ export function createLibrary(root, { games, videoFacets }) {
     more.hidden = !hasMore;
   }
 
+  const gameInfo = $('[data-slot="library-game"]', root);
+  /** Header for the selected game: description + playlist link from the admin. */
+  function drawGameInfo() {
+    const g = games.find((x) => x.slug === state.game);
+    render(gameInfo, g ? html`
+      <div class="card library__game">
+        <div class="stack stack--sm">
+          <p class="eyebrow">Showing videos for</p>
+          <h3>${g.name}</h3>
+          ${g.description ? html`<p>${g.description}</p>` : ""}
+        </div>
+        <div class="cluster">
+          ${g.playlistUrl ? html`<a class="btn btn--youtube btn--sm" href="${safeUrl(g.playlistUrl)}" target="_blank" rel="noopener" data-track="playlist_click" data-track-target="${g.slug}">${icon("youtube")}Full playlist</a>` : ""}
+          <button class="btn btn--ghost btn--sm" type="button" data-clear-game>Show all games</button>
+        </div>
+      </div>` : "");
+  }
+
   function update(patch) {
     Object.assign(state, patch, { page: 1 });
     $$("[data-type]", typesEl).forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.type === state.type)));
     gameEl.value = state.game;
+    drawGameInfo();
     load();
   }
+  gameInfo.addEventListener("click", (e) => { if (e.target.closest("[data-clear-game]")) update({ game: "" }); });
 
   typesEl.addEventListener("click", (e) => {
     const chip = e.target.closest("[data-type]");

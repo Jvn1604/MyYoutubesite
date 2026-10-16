@@ -43,6 +43,7 @@ export function videoCard(video, { track = "watch_video" } = {}) {
           <a class="card__link" href="${safeUrl(video.url)}" target="_blank" rel="noopener" data-track="${track}" data-track-target="${video.id}">${video.title}</a>
         </h3>
         <p class="video-card__meta">${videoMeta(video)}</p>
+        ${video.note ? html`<p class="video-card__note truncate-2">${video.note}</p>` : ""}
       </div>
     </article>`;
 }

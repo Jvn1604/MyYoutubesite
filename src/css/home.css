@@ -117,6 +117,7 @@
 .play-btn svg { width: 28px; height: 28px; margin-left: 3px; }
 .card--interactive:hover .play-btn span { transform: scale(1.08); }
 @media (max-width: 760px) { .latest__grid { grid-template-columns: 1fr; } }
+.latest__featured { margin-top: var(--space-12); display: grid; gap: var(--space-5); }
 
 /* ---------------- Video grids ---------------- */
 .video-grid { --grid-min: 260px; }
@@ -147,6 +148,10 @@
 .game-card .media > img { object-position: center; }
 .game-card__title .card__link { text-align: left; font: inherit; color: inherit; }
 .game-card__meta { font-size: var(--text-xs); color: var(--color-text-soft); }
+.game-card__badges { --cluster-gap: var(--space-1); }
+.library__game { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; justify-content: space-between; margin-bottom: var(--space-5); --card-pad: var(--space-5); }
+.library__game h3 { font-size: var(--text-lg); }
+.library__game p { color: var(--color-text-soft); font-size: var(--text-sm); max-width: 70ch; }
 .game-card[aria-current="true"] { border-color: var(--color-primary); box-shadow: var(--glow-primary); }
 @media (max-width: 480px) { .games__grid { --grid-min: 140px; } }
 

@@ -8,7 +8,7 @@ const EVENT_LABELS = {
   discord_click: "Discord clicks", membership_click: "Membership clicks", game_select: "Game selections", cta_latest: "Watch latest clicks",
   cta_live: "Hero Watch Live", cta_subscribe: "Hero Subscribe", cta_discord: "Hero Discord", whatsapp_click: "WhatsApp clicks",
   instagram_click: "Instagram clicks", linktree_click: "Linktree clicks", youtube_click: "YouTube link clicks",
-  nav_home: "Logo clicks", watch_upcoming: "Reminder clicks",
+  nav_home: "Logo clicks", watch_upcoming: "Reminder clicks", watch_featured: "Featured video clicks", playlist_click: "Playlist clicks",
 };
 
 export async function mount(root) {

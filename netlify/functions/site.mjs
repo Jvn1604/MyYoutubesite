@@ -1,4 +1,4 @@
-import { handle, json, error } from "../../server/middleware/http.js";
+import { handle, json, error, cdnCache } from "../../server/middleware/http.js";
 import { loadContent, applyDevMock } from "../../server/services/content-source.js";
 import { buildSitePayload } from "../../server/services/site-payload.js";
 
@@ -11,12 +11,10 @@ export default handle(async (req) => {
   try {
     const payload = buildSitePayload(applyDevMock(await loadContent(), mock));
     if (!mock) lastGood = payload;
-    return json(payload, {
-      headers: { "Cache-Control": mock ? "no-store" : "public, max-age=0, s-maxage=60, stale-while-revalidate=300, stale-if-error=86400" },
-    });
+    return json(payload, { headers: mock ? { "Cache-Control": "no-store" } : cdnCache(60) });
   } catch (err) {
     console.error("[api/site] content load failed:", err.message);
-    if (lastGood) return json(lastGood, { headers: { "Cache-Control": "public, max-age=0, s-maxage=30", "X-Content-Stale": "1" } });
+    if (lastGood) return json(lastGood, { headers: { ...cdnCache(30), "X-Content-Stale": "1" } });
     return error(503, "Content temporarily unavailable");
   }
 });

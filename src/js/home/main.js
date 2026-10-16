@@ -13,7 +13,7 @@ import { applyAppearance } from "./theme.js";
 import { applySections, bindSettings } from "./sections.js";
 import { renderHero, initHeroParallax } from "./hero.js";
 import { renderStats } from "./stats.js";
-import { renderLatest, initPlayButtons } from "./latest.js";
+import { renderLatest, renderFeatured, initPlayButtons } from "./latest.js";
 import { renderGames, markSelectedGame } from "./games.js";
 import { renderSchedule } from "./schedule.js";
 import { renderGoal } from "./goal.js";
@@ -40,7 +40,8 @@ function siteUrl() {
 
 function renderLiveParts(data) {
   renderHero(document, data);
-  renderLatest(slot("latest"), data);
+  const shown = renderLatest(slot("latest"), data);
+  renderFeatured(slot("featured"), data, shown);
   renderSchedule({ slot: slot("schedule"), message: slot("schedule-message") }, data);
 }
 

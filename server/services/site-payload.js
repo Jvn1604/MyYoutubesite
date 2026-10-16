@@ -21,6 +21,7 @@ export function toVideoDto(row, gameIndex) {
     id: row.id,
     title: row.title,
     description: row.customDescription || row.description || "",
+    note: row.customDescription || null, // short website-only text written in the admin (never the YouTube description)
     url: `https://www.youtube.com/watch?v=${row.id}`,
     publishedAt: row.publishedAt,
     durationSeconds: row.durationSeconds ?? null,

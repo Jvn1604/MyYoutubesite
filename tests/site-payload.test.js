@@ -32,6 +32,28 @@ describe("buildSitePayload", () => {
     expect(p.videoFacets.byKind.stream).toBe(15);
   });
 
+  it("orders featured videos by admin priority and excludes hidden ones", () => {
+    const c = content();
+    Object.assign(c.videos[3], { featured: true, priority: 1 });
+    Object.assign(c.videos[5], { featured: true, priority: 9 });
+    Object.assign(c.videos[6], { featured: true, hidden: true });
+    c.videos[0].featured = false;
+    expect(buildSitePayload(c).featured.map((v) => v.id)).toEqual([c.videos[5].id, c.videos[3].id]);
+  });
+
+  it("exposes only the admin's website description as `note`", () => {
+    const c = content();
+    c.videos[0].description = "Long YouTube description with links…";
+    const plain = buildSitePayload(c).recentStreams[0];
+    expect(plain.note).toBeNull();
+    c.videos[0].customDescription = "Day-one blind playthrough";
+    expect(buildSitePayload(c).recentStreams[0].note).toBe("Day-one blind playthrough");
+  });
+
+  it("never sends the internal schedule settings key to visitors", () => {
+    expect(buildSitePayload(content()).settings.schedule).toBeUndefined();
+  });
+
   it("puts the newest finished stream in latest.stream", () => {
     expect(buildSitePayload(content()).latest.stream.id).toBe("7utpCWTZQpg");
   });
