@@ -16,28 +16,37 @@ const VIDEO_COLUMNS = [
  * Insert or update videos. Returns { inserted: [ids], updated: n }.
  * A row counts as "changed" only if a meaningful field differs (keeps logs honest).
  */
+const COLUMN_TYPES = {
+  youtube_id: "text", title: "text", description: "text", published_at: "timestamptz", duration_seconds: "integer",
+  thumbnails: "jsonb", kind: "text", live_state: "text", scheduled_start: "timestamptz", actual_start: "timestamptz",
+  actual_end: "timestamptz", concurrent_viewers: "integer", view_count: "bigint", like_count: "bigint",
+  comment_count: "bigint", is_available: "boolean",
+};
+const BATCH = 100;
+
 export async function upsertVideos(db, rows) {
   if (!rows.length) return { inserted: [], changed: 0 };
   const cols = VIDEO_COLUMNS.map(([c]) => c);
   const updates = cols.filter((c) => c !== "youtube_id").map((c) => `${c} = excluded.${c}`).join(", ");
+  const recordType = cols.map((c) => `${c} ${COLUMN_TYPES[c]}`).join(", ");
   const inserted = [];
   let changed = 0;
 
+  // One statement per 100 rows (json_to_recordset) instead of a round-trip per video
   await db.transaction(async (tx) => {
-    for (const row of rows) {
-      const values = VIDEO_COLUMNS.map(([, key, type]) => (type === "jsonb" ? JSON.stringify(row[key] ?? {}) : row[key] ?? null));
-      const placeholders = VIDEO_COLUMNS.map(([, , type], i) => `$${i + 1}${type === "jsonb" ? "::jsonb" : ""}`).join(", ");
-      const [res] = await tx.query(
-        `insert into videos (${cols.join(", ")}, synced_at) values (${placeholders}, now())
+    for (let i = 0; i < rows.length; i += BATCH) {
+      const payload = rows.slice(i, i + BATCH).map((row) => Object.fromEntries(VIDEO_COLUMNS.map(([col, key]) => [col, row[key] ?? null])));
+      const result = await tx.query(
+        `insert into videos (${cols.join(", ")}, synced_at)
+         select ${cols.join(", ")}, now() from json_to_recordset($1::json) as r(${recordType})
          on conflict (youtube_id) do update set ${updates}, synced_at = now()
          where (videos.title, videos.live_state, videos.view_count, videos.concurrent_viewers, videos.is_available, videos.kind, videos.actual_end)
            is distinct from (excluded.title, excluded.live_state, excluded.view_count, excluded.concurrent_viewers, excluded.is_available, excluded.kind, excluded.actual_end)
-         returning (xmax = 0) as inserted`,
-        values
+         returning youtube_id, (xmax = 0) as inserted`,
+        [JSON.stringify(payload)]
       );
-      if (!res) continue; // unchanged
-      changed += 1;
-      if (res.inserted) inserted.push(row.youtubeId);
+      changed += result.length; // unchanged rows are filtered out by the WHERE above
+      result.forEach((r) => r.inserted && inserted.push(r.youtube_id));
     }
   });
   return { inserted, changed };

@@ -14,7 +14,7 @@ export const channel = {
   viewCount: 219369,
   videoCount: 434,
   streamCount: 490,
-  avatarUrl: "/src/assets/fallback/avatar.svg",
+  avatarUrl: "/fallback/avatar.svg",
   bannerUrl: "https://yt3.googleusercontent.com/7NGWBrbpjAhMf7Y7CNqnwwQDpSQc8RGPT1m-Qgwbl0s7cq2OcTBs32KmpDkU0UomlAsj3SIG5w=w1138-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj",
   syncedAt: "2026-10-16T10:00:00Z",
 };

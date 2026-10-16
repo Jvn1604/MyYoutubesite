@@ -4,6 +4,8 @@
  * overrides here; the payload builder applies visibility rules.
  */
 
+import { publicUrl } from "../services/storage.js";
+
 const iso = (d) => (d ? new Date(d).toISOString() : null);
 
 export async function loadSettings(db) {
@@ -32,7 +34,7 @@ export async function loadContentFromDb(db) {
 
   const c = channelRows[0];
   const goal = goalRows[0];
-  const mediaUrl = (path) => (path ? `/media/${path}` : "");
+  const mediaUrl = (path) => (path ? publicUrl(path) : "");
 
   return {
     settings,

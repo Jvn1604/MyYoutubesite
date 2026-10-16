@@ -6,7 +6,8 @@
 [functions]
   node_bundler = "esbuild"
   # Local/test-only database engine; never loaded when DATABASE_URL is a postgres:// URL
-  external_node_modules = ["@electric-sql/pglite"]
+  # sharp ships native binaries, so it must be installed rather than bundled
+  external_node_modules = ["@electric-sql/pglite", "sharp"]
 
 # `npm run dev` → Netlify CLI proxies Vite (5173) and serves functions on :8888
 [dev]
@@ -27,7 +28,8 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    X-Frame-Options = "DENY"
+    # SAMEORIGIN (not DENY): the admin Appearance page previews the homepage in an iframe
+    X-Frame-Options = "SAMEORIGIN"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
 [[headers]]

@@ -3,7 +3,7 @@ import { html, safeUrl } from "../core/dom.js";
 import { formatViews, formatDate, formatDuration, formatNumber, formatRelative } from "../core/format.js";
 import { icon } from "../ui/icons.js";
 
-export const FALLBACK_THUMB = "/src/assets/fallback/thumbnail.svg";
+export const FALLBACK_THUMB = "/fallback/thumbnail.svg";
 
 const KIND_LABEL = { video: "Video", stream: "Stream", short: "Short" };
 

@@ -62,7 +62,13 @@ export async function createDb(url = requireEnv("DATABASE_URL")) {
     connect_timeout: 10,
     prepare: false,         // required by Supabase's transaction pooler (pgbouncer)
     // int8 (counts, ids) as plain numbers: all our values are far below 2^53 and must be JSON-safe
-    types: { int8: { to: 20, from: [20], parse: Number, serialize: String } },
+    types: {
+      int8: { to: 20, from: [20], parse: Number, serialize: String },
+      // Our queries pass JSON as already-stringified text (same as PGlite expects).
+      // postgres.js would JSON.stringify it again → a JSON *string* instead of an object.
+      json: { to: 114, from: [114], parse: JSON.parse, serialize: (v) => (typeof v === "string" ? v : JSON.stringify(v)) },
+      jsonb: { to: 3802, from: [3802], parse: JSON.parse, serialize: (v) => (typeof v === "string" ? v : JSON.stringify(v)) },
+    },
     transform: { undefined: null },
     onnotice: () => {},
   }), { closeTimeout: local ? 0 : 5 }); // local: free the single server slot immediately

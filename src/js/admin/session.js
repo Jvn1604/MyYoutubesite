@@ -26,6 +26,8 @@ export async function requireSession() {
 }
 
 export const currentAdmin = () => admin;
+/** For requests not made through adminApi (e.g. multipart uploads). */
+export const csrfHeader = () => (csrfToken ? { "X-CSRF-Token": csrfToken } : {});
 export const setCsrfToken = (token) => { csrfToken = token; };
 
 /** api() for admin endpoints: CSRF header on writes, login redirect on 401. */

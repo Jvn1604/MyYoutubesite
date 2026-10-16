@@ -29,7 +29,7 @@ export const settings = {
     nameTa: "தமிழ்",
     greetingTa: "வணக்கம் நண்பர்களே!",
     community: "Phantom Troupe",
-    logoUrl: "/src/assets/fallback/avatar.svg",
+    logoUrl: "/fallback/avatar.svg",
   },
   hero: {
     heading: "DePhantom",

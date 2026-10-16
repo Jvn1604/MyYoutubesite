@@ -26,7 +26,21 @@ export function openModal({ title, body, footer, wide = false, media = false, di
     <div class="modal__body">${body}</div>
     ${footer ? html`<footer class="modal__footer">${footer}</footer>` : ""}`);
 
-  const close = (value = "") => dialog.close(value);
+  // Settle exactly once, whichever happens first: our own close() or the browser's
+  // "close" event (Esc). We don't rely on the event alone because Chrome delivers it
+  // with rendering, which is paused in background tabs.
+  let settled = false;
+  const finish = (value) => {
+    if (settled) return;
+    settled = true;
+    onClose?.(value);
+    dialog.remove();
+    if (opener instanceof HTMLElement && opener.isConnected) opener.focus();
+  };
+  const close = (value = "") => {
+    if (dialog.open) dialog.close(value);
+    finish(value);
+  };
 
   dialog.addEventListener("click", (e) => {
     const closer = e.target.closest("[data-close]");
@@ -40,11 +54,7 @@ export function openModal({ title, body, footer, wide = false, media = false, di
   });
   if (!dismissible) dialog.addEventListener("cancel", (e) => e.preventDefault());
 
-  dialog.addEventListener("close", () => {
-    onClose?.(dialog.returnValue);
-    dialog.remove();
-    if (opener instanceof HTMLElement && opener.isConnected) opener.focus();
-  });
+  dialog.addEventListener("close", () => finish(dialog.returnValue));
 
   document.body.append(dialog);
   dialog.showModal();

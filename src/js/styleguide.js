@@ -24,7 +24,7 @@ render($(".sg-swatches"), TOKENS.map((t) => html`
 $$("[data-swatch]").forEach((el) => el.style.setProperty("--swatch", `var(${el.dataset.swatch})`));
 
 // Sample data shaped like the future /api/site payload
-const FALLBACK_THUMB = "/src/assets/fallback/thumbnail.svg";
+const FALLBACK_THUMB = "/fallback/thumbnail.svg";
 const videos = [
   { id: "7utpCWTZQpg", title: "Valor Mortis – Napoleonic era Soulslike – Pt 1", kind: "stream", liveState: "ended", publishedAt: "2026-10-14T13:00:00Z", views: 1297, duration: 13320 },
   { id: "l80h8U2d7_E", title: "The Blood of Dawnwalker – Part 2", kind: "stream", liveState: "live", publishedAt: "2026-09-16T13:00:00Z", views: 1831, duration: 0 },
@@ -102,9 +102,9 @@ $("#sg-form").addEventListener("submit", (e) => { e.preventDefault(); toast.succ
 // Theme presets / motion toggle (same mechanism the admin appearance page will use)
 const PRESETS = {
   phantom: { "--brand-primary": "#a855f7", "--brand-secondary": "#e04bff", "--brand-bg": "#0a0a0f" },
-  blood: { "--brand-primary": "#e11d48", "--brand-secondary": "#f97316", "--brand-bg": "#0c0708" },
-  abyss: { "--brand-primary": "#38bdf8", "--brand-secondary": "#818cf8", "--brand-bg": "#060a12" },
-  minimal: { "--brand-primary": "#d4d4d8", "--brand-secondary": "#a1a1aa", "--brand-bg": "#09090b" },
+  blood: { "--brand-primary": "#e11d48", "--brand-secondary": "#ea580c", "--brand-bg": "#0c0708" },
+  abyss: { "--brand-primary": "#0284c7", "--brand-secondary": "#6366f1", "--brand-bg": "#060a12" },
+  minimal: { "--brand-primary": "#71717a", "--brand-secondary": "#52525b", "--brand-bg": "#09090b" },
 };
 $("#sg-preset").addEventListener("change", (e) => {
   Object.entries(PRESETS[e.target.value]).forEach(([k, v]) => document.documentElement.style.setProperty(k, v));

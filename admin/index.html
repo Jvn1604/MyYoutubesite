@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Dashboard | DePhantom Admin</title>
-  <link rel="icon" href="/src/assets/fallback/avatar.svg" type="image/svg+xml">
+  <link rel="icon" href="/fallback/avatar.svg" type="image/svg+xml">
   <script src="/boot.js"></script>
   <link rel="stylesheet" href="/src/css/core.css">
   <link rel="stylesheet" href="/src/css/admin.css">
@@ -13,20 +13,40 @@
 </head>
 <body class="admin">
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="admin-topbar">
-    <a class="brand" href="/admin/">
-      <img class="avatar brand__logo" src="/src/assets/fallback/avatar.svg" alt="" width="38" height="38">
-      <span>DePhantom <span class="brand__ta">Admin</span></span>
-    </a>
-    <div class="cluster">
-      <span class="text-sm text-muted" data-slot="admin-email"></span>
-      <a class="btn btn--ghost btn--sm" href="/" target="_blank" rel="noopener">View website</a>
-      <button class="btn btn--ghost btn--sm" type="button" data-action="logout">Log out</button>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Admin navigation">
+      <a class="brand admin-sidebar__brand" href="#/dashboard">
+        <img class="avatar brand__logo" src="/fallback/avatar.svg" alt="" width="38" height="38">
+        <span>DePhantom <span class="brand__ta">Admin</span></span>
+      </a>
+      <nav class="admin-nav" data-slot="nav"></nav>
+      <div class="admin-sidebar__foot">
+        <a class="admin-nav__link" href="/" target="_blank" rel="noopener" data-icon-left="external">View website</a>
+        <button class="admin-nav__link" type="button" data-action="logout" data-icon-left="arrowRight">Log out</button>
+      </div>
+    </aside>
+    <div class="admin-scrim" data-action="close-nav" hidden></div>
+
+    <div class="admin-content">
+      <header class="admin-topbar">
+        <button class="icon-btn admin-topbar__menu" type="button" aria-controls="admin-sidebar" aria-expanded="false" aria-label="Open navigation" data-action="open-nav" data-icon="menu"></button>
+        <h1 class="admin-topbar__title" data-slot="page-title">Dashboard</h1>
+        <div class="cluster admin-topbar__tools">
+          <a class="badge badge--hidden admin-sync" href="#/youtube" data-slot="sync-status">Checking sync…</a>
+          <div class="admin-menu">
+            <button class="btn btn--ghost btn--sm" type="button" aria-haspopup="menu" aria-expanded="false" data-action="profile">
+              <span data-slot="admin-email"></span>
+            </button>
+            <div class="admin-menu__list card card--elevated" role="menu" hidden data-slot="profile-menu">
+              <a role="menuitem" href="#/settings">Account &amp; password</a>
+              <button role="menuitem" type="button" data-action="logout">Log out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main id="main" class="admin-main" tabindex="-1" data-slot="outlet" aria-live="polite"></main>
     </div>
-  </header>
-  <main id="main" class="admin-main container" tabindex="-1">
-    <h1 class="section-header__title">Welcome back</h1>
-    <p class="text-soft">You're signed in. The full dashboard arrives in phase 11.</p>
-  </main>
+  </div>
 </body>
 </html>
