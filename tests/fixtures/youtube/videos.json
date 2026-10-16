@@ -1,0 +1,149 @@
+{
+  "kind": "youtube#videoListResponse",
+  "items": [
+    {
+      "id": "7utpCWTZQpg",
+      "_case": "finished livestream",
+      "snippet": {
+        "publishedAt": "2026-10-14T12:58:00Z",
+        "title": "Valor Mortis -Napoleonic era Soulslike -pt1",
+        "description": "Tamil gameplay",
+        "thumbnails": {
+          "default": { "url": "https://i.ytimg.com/vi/7utpCWTZQpg/default.jpg" },
+          "medium": { "url": "https://i.ytimg.com/vi/7utpCWTZQpg/mqdefault.jpg" },
+          "high": { "url": "https://i.ytimg.com/vi/7utpCWTZQpg/hqdefault.jpg" },
+          "maxres": { "url": "https://i.ytimg.com/vi/7utpCWTZQpg/maxresdefault.jpg" }
+        },
+        "liveBroadcastContent": "none"
+      },
+      "contentDetails": { "duration": "PT3H42M5S" },
+      "status": { "privacyStatus": "public" },
+      "statistics": { "viewCount": "1297", "likeCount": "88", "commentCount": "14" },
+      "player": { "embedWidth": "1280", "embedHeight": "720" },
+      "liveStreamingDetails": { "actualStartTime": "2026-10-14T13:01:10Z", "actualEndTime": "2026-10-14T16:43:15Z", "scheduledStartTime": "2026-10-14T13:00:00Z" }
+    },
+    {
+      "id": "LiveLiveLv1",
+      "_case": "currently live",
+      "snippet": {
+        "publishedAt": "2026-10-16T12:55:00Z",
+        "title": "🔴 Valor Mortis – Pt 2 | Napoleon boss",
+        "description": "",
+        "thumbnails": { "high": { "url": "https://i.ytimg.com/vi/LiveLiveLv1/hqdefault_live.jpg" } },
+        "liveBroadcastContent": "live"
+      },
+      "contentDetails": { "duration": "P0D" },
+      "status": { "privacyStatus": "public" },
+      "statistics": { "viewCount": "210", "likeCount": "31", "commentCount": "0" },
+      "player": { "embedWidth": "1280", "embedHeight": "720" },
+      "liveStreamingDetails": { "actualStartTime": "2026-10-16T13:00:20Z", "scheduledStartTime": "2026-10-16T13:00:00Z", "concurrentViewers": "148" }
+    },
+    {
+      "id": "UpcomingUp1",
+      "_case": "scheduled stream",
+      "snippet": {
+        "publishedAt": "2026-10-16T08:00:00Z",
+        "title": "Elden Ring Nightreign – Boss rush",
+        "description": "",
+        "thumbnails": { "high": { "url": "https://i.ytimg.com/vi/UpcomingUp1/hqdefault.jpg" } },
+        "liveBroadcastContent": "upcoming"
+      },
+      "contentDetails": { "duration": "P0D" },
+      "status": { "privacyStatus": "public" },
+      "statistics": { "viewCount": "0", "likeCount": "2", "commentCount": "0" },
+      "liveStreamingDetails": { "scheduledStartTime": "2026-10-17T13:00:00Z" }
+    },
+    {
+      "id": "RegularVid1",
+      "_case": "regular 16:9 upload",
+      "snippet": {
+        "publishedAt": "2026-10-01T10:00:00Z",
+        "title": "What is Soulslike?",
+        "description": "Explained in Tamil",
+        "thumbnails": { "medium": { "url": "https://i.ytimg.com/vi/RegularVid1/mqdefault.jpg" }, "high": { "url": "https://i.ytimg.com/vi/RegularVid1/hqdefault.jpg" } },
+        "liveBroadcastContent": "none"
+      },
+      "contentDetails": { "duration": "PT12M34S" },
+      "status": { "privacyStatus": "public" },
+      "statistics": { "viewCount": "312", "likeCount": "40", "commentCount": "9" },
+      "player": { "embedWidth": "1280", "embedHeight": "720" }
+    },
+    {
+      "id": "VerticalSh1",
+      "_case": "vertical short without #shorts tag",
+      "snippet": {
+        "publishedAt": "2026-10-10T10:00:00Z",
+        "title": "Just Trust in Jill bro 👀 #dephantomtamil",
+        "description": "",
+        "thumbnails": { "high": { "url": "https://i.ytimg.com/vi/VerticalSh1/hqdefault.jpg" } },
+        "liveBroadcastContent": "none"
+      },
+      "contentDetails": { "duration": "PT45S" },
+      "status": { "privacyStatus": "public" },
+      "statistics": { "viewCount": "1500", "likeCount": "120", "commentCount": "6" },
+      "player": { "embedWidth": "405", "embedHeight": "720" }
+    },
+    {
+      "id": "ShortTagSh1",
+      "_case": "#shorts tagged, no player info, 2:30",
+      "snippet": {
+        "publishedAt": "2026-10-09T10:00:00Z",
+        "title": "Restrain Skill is much fun #shorts",
+        "description": "",
+        "thumbnails": {},
+        "liveBroadcastContent": "none"
+      },
+      "contentDetails": { "duration": "PT2M30S" },
+      "status": { "privacyStatus": "public" },
+      "statistics": { "viewCount": "1100" }
+    },
+    {
+      "id": "TwoMinVid01",
+      "_case": "short-length but horizontal → video",
+      "snippet": {
+        "publishedAt": "2026-09-01T10:00:00Z",
+        "title": "How To Get WHITE BEAR as PERMANENT pet",
+        "description": "",
+        "thumbnails": { "high": { "url": "https://i.ytimg.com/vi/TwoMinVid01/hqdefault.jpg" } },
+        "liveBroadcastContent": "none"
+      },
+      "contentDetails": { "duration": "PT1M58S" },
+      "status": { "privacyStatus": "public" },
+      "statistics": { "viewCount": "900", "commentCount": "3" },
+      "player": { "embedWidth": "1280", "embedHeight": "720" }
+    },
+    {
+      "id": "PremiereVi1",
+      "_case": "upcoming premiere of an uploaded video",
+      "snippet": {
+        "publishedAt": "2026-10-16T09:00:00Z",
+        "title": "My 2026 RECAP GAMES | GAMERS",
+        "description": "",
+        "thumbnails": { "high": { "url": "https://i.ytimg.com/vi/PremiereVi1/hqdefault.jpg" } },
+        "liveBroadcastContent": "upcoming"
+      },
+      "contentDetails": { "duration": "PT10M2S" },
+      "status": { "privacyStatus": "public" },
+      "statistics": { "viewCount": "0" },
+      "player": { "embedWidth": "1280", "embedHeight": "720" },
+      "liveStreamingDetails": { "scheduledStartTime": "2026-10-18T12:00:00Z" }
+    },
+    {
+      "id": "UnlistedVi1",
+      "_case": "unlisted → not public",
+      "snippet": { "publishedAt": "2026-08-01T10:00:00Z", "title": "test upload", "description": "", "thumbnails": {}, "liveBroadcastContent": "none" },
+      "contentDetails": { "duration": "PT5M" },
+      "status": { "privacyStatus": "unlisted" },
+      "statistics": { "viewCount": "3" }
+    },
+    {
+      "id": "StaleLive01",
+      "_case": "broadcast flag lagging: started, not ended, flag says none",
+      "snippet": { "publishedAt": "2026-10-16T12:00:00Z", "title": "Party Animals with Friends", "description": "", "thumbnails": {}, "liveBroadcastContent": "none" },
+      "contentDetails": { "duration": "P0D" },
+      "status": { "privacyStatus": "public" },
+      "statistics": { "viewCount": "57" },
+      "liveStreamingDetails": { "actualStartTime": "2026-10-16T12:05:00Z", "concurrentViewers": "21" }
+    }
+  ]
+}
