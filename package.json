@@ -1,0 +1,22 @@
+{
+  "name": "dephantom-tamil-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Official website + CMS for the DePhantom தமிழ் YouTube channel",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "netlify dev",
+    "dev:frontend": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "netlify-cli": "^27.12.1",
+    "vite": "^6.4.4",
+    "vitest": "^3.2.7"
+  }
+}
