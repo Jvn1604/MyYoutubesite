@@ -31,7 +31,13 @@ const supabase = () => {
 
 export function publicUrl(path) {
   if (!path) return "";
-  if (storageKind() === "supabase") {
+  let kind;
+  try {
+    kind = storageKind();
+  } catch {
+    return `/media/${path}`; // misconfigured storage must never break the public page; the image just 404s
+  }
+  if (kind === "supabase") {
     const { base, bucket } = supabase();
     return `${base}/storage/v1/object/public/${bucket}/${path}`;
   }

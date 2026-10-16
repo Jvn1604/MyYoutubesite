@@ -202,6 +202,21 @@ describe("media", () => {
     expect((await uploadReq(tiny)).data.error).toMatch(/too small/);
     expect((await uploadReq(Buffer.alloc(10), { kind: "not-a-kind" })).status).toBe(400);
   });
+  it("explains missing storage configuration in production instead of failing with 500", async () => {
+    const saved = { vitest: process.env.VITEST, context: process.env.CONTEXT };
+    delete process.env.VITEST;
+    process.env.CONTEXT = "production";
+    try {
+      const png = await sharp({ create: { width: 300, height: 300, channels: 3, background: "#000" } }).png().toBuffer();
+      const { status, data } = await uploadReq(png);
+      expect(status).toBe(503);
+      expect(data.error).toMatch(/SUPABASE_URL/);
+    } finally {
+      process.env.VITEST = saved.vitest;
+      if (saved.context === undefined) delete process.env.CONTEXT; else process.env.CONTEXT = saved.context;
+    }
+  });
+
   it("refuses to delete an image that's in use", async () => {
     const png = await sharp({ create: { width: 300, height: 400, channels: 3, background: "#e04bff" } }).png().toBuffer();
     const { data: m } = await uploadReq(png);

@@ -5,6 +5,8 @@
  */
 import { html, raw, render } from "../core/dom.js";
 
+let modalCount = 0; // unique ids for aria-labelledby (crypto.randomUUID needs a secure context)
+
 const CLOSE_ICON = html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>`;
 
 /**
@@ -15,7 +17,7 @@ export function openModal({ title, body, footer, wide = false, media = false, di
   const opener = document.activeElement;
   const dialog = document.createElement("dialog");
   dialog.className = ["modal", wide && "modal--wide", media && "modal--media"].filter(Boolean).join(" ");
-  const titleId = `modal-title-${crypto.randomUUID().slice(0, 8)}`;
+  const titleId = `modal-title-${++modalCount}`;
   dialog.setAttribute("aria-labelledby", titleId);
 
   render(dialog, html`

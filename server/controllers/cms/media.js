@@ -2,7 +2,8 @@ import { HttpError } from "../../middleware/http.js";
 import { readJson } from "../../middleware/auth.js";
 import { mediaPatchSchema, parseOrThrow } from "../../validation/schemas.js";
 import { processImage, UploadError, MEDIA_KINDS, MAX_UPLOAD_BYTES } from "../../services/images.js";
-import { putObject, removeObjects, publicUrl } from "../../services/storage.js";
+import { putObject, removeObjects, publicUrl, storageKind } from "../../services/storage.js";
+import { ConfigError } from "../../config.js";
 import { toId, notFoundIfEmpty } from "./helpers.js";
 
 const SELECT = `select id, kind, path, mime, width, height, bytes, variants, alt, created_at as "createdAt" from media`;
@@ -21,7 +22,20 @@ export async function list({ db, query }) {
   return rows.map(shape);
 }
 
+/** Admin-facing: say exactly what's missing instead of a generic 500. */
+function assertStorageConfigured() {
+  try {
+    storageKind();
+  } catch (err) {
+    if (err instanceof ConfigError) {
+      throw new HttpError(503, "Image storage isn't set up yet. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to the site's environment variables (see README → Media storage).");
+    }
+    throw err;
+  }
+}
+
 export async function upload({ req, db }) {
+  assertStorageConfigured();
   if (!(req.headers.get("content-type") ?? "").startsWith("multipart/form-data")) throw new HttpError(415, "Expected a file upload");
   if (Number(req.headers.get("content-length") ?? 0) > MAX_UPLOAD_BYTES + 64 * 1024) throw new HttpError(413, "Images must be 4 MB or smaller");
 
