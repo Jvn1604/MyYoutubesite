@@ -3,6 +3,10 @@
   publish = "dist"
   functions = "netlify/functions"
 
+[build.environment]
+  # scripts use `node --env-file-if-exists` (Node 22.9+)
+  NODE_VERSION = "22"
+
 [functions]
   node_bundler = "esbuild"
   # Local/test-only database engine; never loaded when DATABASE_URL is a postgres:// URL
