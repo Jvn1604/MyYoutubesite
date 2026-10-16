@@ -1,3 +1,6 @@
+/* Homepage stylesheet: core design system + homepage sections, bundled into one file */
+@import "./core.css";
+
 /* Homepage sections. Uses only tokens + component classes from core.css. */
 
 /* ---------------- Hero ---------------- */

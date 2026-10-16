@@ -24,6 +24,8 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.3.16",
     "@electric-sql/pglite-socket": "^0.0.22",
+    "axe-core": "^4.14.0",
+    "lighthouse": "^12.8.2",
     "netlify-cli": "^27.12.1",
     "vite": "^6.4.4",
     "vitest": "^3.2.7"

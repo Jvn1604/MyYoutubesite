@@ -1,5 +1,5 @@
 /** Subscriber goal with animated progress and a one-time celebration. */
-import { $, html, render } from "../core/dom.js";
+import { $, html, render, safeUrl } from "../core/dom.js";
 import { formatNumber, formatDate } from "../core/format.js";
 
 const CONFETTI_COLORS = ["var(--color-primary)", "var(--color-secondary)", "var(--color-warning)", "var(--color-success)", "#ffffff"];
@@ -26,7 +26,7 @@ function celebrate(card, key) {
   setTimeout(() => layer.remove(), 3200);
 }
 
-export function renderGoal(slot, { goal }) {
+export function renderGoal(slot, { goal, settings }) {
   const section = slot.closest("[data-section]");
   if (!goal || goal.current == null) {
     section.hidden = true; // no live subscriber number → don't show a stale goal
@@ -56,7 +56,7 @@ export function renderGoal(slot, { goal }) {
         <span><b>+${formatNumber(gained, "full")}</b> gained (${pct}%)</span>
         <span>${achieved ? "Thank you, Phantom Troupe! 💜" : html`<b>${formatNumber(remaining, "full")}</b> to go${goal.deadline ? ` · by ${formatDate(goal.deadline)}` : ""}`}</span>
       </div>
-      ${achieved ? "" : html`<a class="btn btn--youtube" href="#" data-link="subscribe" target="_blank" rel="noopener" data-track="subscribe_click">Help reach the goal: subscribe</a>`}
+      ${achieved ? "" : html`<a class="btn btn--youtube" href="${safeUrl(settings.links?.subscribe)}" target="_blank" rel="noopener" data-track="subscribe_click">Help reach the goal: subscribe</a>`}
     </div>`);
 
   const card = $(".goal", slot);

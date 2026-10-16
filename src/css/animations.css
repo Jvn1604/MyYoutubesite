@@ -47,8 +47,9 @@
 [data-enter="4"] { --i: 4; }
 [data-enter="5"] { --i: 5; }
 .js [data-enter] {
-  animation: rise calc(800ms * var(--motion-scale)) var(--ease-out) both;
-  animation-delay: calc(120ms + var(--i, 0) * 110ms * var(--motion-scale));
+  /* Short delays: the hero text is usually the Largest Contentful Paint element */
+  animation: rise calc(700ms * var(--motion-scale)) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms * var(--motion-scale));
 }
 
 /* ---- Utility motions ---- */

@@ -1,3 +1,6 @@
+/* Admin stylesheet: core design system + admin UI, bundled into one file */
+@import "./core.css";
+
 /* Admin interface. Usability first; built from the shared tokens and components. */
 
 /* Nothing admin-only renders until the session is confirmed */

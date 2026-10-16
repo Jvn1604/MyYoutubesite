@@ -31,8 +31,8 @@
   --color-primary-text: color-mix(in oklab, var(--brand-primary) 65%, white); /* AA on dark bg */
   --color-secondary: var(--brand-secondary);
   --color-secondary-soft: color-mix(in oklab, var(--brand-secondary) 14%, transparent);
-  --color-youtube: #ff0033;
-  --color-youtube-hover: #ff3355;
+  --color-youtube: #e6002e;       /* YouTube red, deepened so white text passes WCAG AA (4.8:1) */
+  --color-youtube-hover: #cc0029; /* darker on hover keeps contrast */
   --color-on-accent: #ffffff;
 
   /* ---- Colour: text ---- */

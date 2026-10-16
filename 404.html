@@ -3,14 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Page not found | DePhantom தமிழ்</title>
+  <title>You Died: page not found | DePhantom தமிழ்</title>
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="/src/css/core.css">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/fallback/avatar.svg" type="image/svg+xml">
+  <script src="/boot.js"></script>
+  <link rel="stylesheet" href="/src/css/not-found.css">
 </head>
-<body>
-  <main id="main">
-    <h1>404: You died.</h1>
-    <p>This page doesn't exist. <a href="/">Return to the bonfire</a>.</p>
+<body class="not-found">
+  <main id="main" class="not-found__inner">
+    <p class="eyebrow" data-enter="1">Error 404</p>
+    <h1 class="not-found__title" data-enter="2">You Died</h1>
+    <p class="not-found__text text-soft" data-enter="3">This page doesn't exist, or it fell off the map. <span lang="ta">பரவாயில்லை</span>, respawn at the bonfire and try again.</p>
+    <div class="cluster cluster--center" data-enter="4">
+      <a class="btn btn--primary btn--lg" href="/">Return to the bonfire</a>
+      <a class="btn btn--ghost" href="/#videos">Browse videos</a>
+    </div>
   </main>
 </body>
 </html>
