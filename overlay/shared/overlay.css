@@ -1,0 +1,377 @@
+/* =====================================================================
+   DePhantom overlay design system. Every scene is a 1920×1080 canvas;
+   set the OBS Browser Source to exactly that size.
+   Colours come from the control panel (--p, --s, --bg).
+   ===================================================================== */
+
+@font-face { font-family: "Rajdhani"; font-weight: 600; font-display: block; src: url("/fonts/rajdhani/rajdhani-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Rajdhani"; font-weight: 700; font-display: block; src: url("/fonts/rajdhani/rajdhani-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 100 900; font-display: block; src: url("/fonts/inter/inter-latin-wght-normal.woff2") format("woff2"); }
+
+:root {
+  --p: #a855f7;
+  --s: #e04bff;
+  --bg: #0a0a0f;
+  --text: #f1f0f7;
+  --soft: #c9c9d8;
+  --muted: #9a9ab0;
+  --live: #ff3b3b;
+  --success: #34d399;
+
+  --grad: linear-gradient(135deg, var(--p), var(--s));
+  --panel: color-mix(in oklab, var(--bg) 78%, transparent);
+  --panel-solid: color-mix(in oklab, var(--bg) 92%, white 8%);
+  --edge: color-mix(in oklab, var(--p) 55%, transparent);
+  --glow: 0 0 24px -4px color-mix(in oklab, var(--p) 70%, transparent);
+  --cut: 18px;
+
+  --font-display: "Rajdhani", "Inter", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Preview helper: open a scene with ?bg in a normal browser to see it over a fake game */
+html.preview-bg body {
+  background:
+    radial-gradient(circle at 30% 40%, #2a3a2a, transparent 60%),
+    radial-gradient(circle at 70% 70%, #3a2a1a, transparent 55%),
+    #151515;
+}
+
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after {
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0s !important;
+}
+
+/* ---------- Panels with clipped "phantom" corners ---------- */
+.panel {
+  position: relative;
+  background: var(--panel);
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+}
+/* Gradient outline that follows the clipped shape, with a bright comet of light
+   travelling around it (needs @property, supported by OBS 28+). */
+@property --angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  background:
+    conic-gradient(from var(--angle), transparent 0 62%, var(--p) 76%, #fff 82%, var(--s) 88%, transparent 98%),
+    linear-gradient(135deg, color-mix(in oklab, var(--p) 70%, transparent), color-mix(in oklab, var(--p) 18%, transparent) 45%, color-mix(in oklab, var(--s) 18%, transparent) 60%, color-mix(in oklab, var(--s) 70%, transparent));
+  clip-path: inherit;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: orbit var(--orbit, 7s) linear infinite;
+  animation-delay: var(--orbit-delay, 0s);
+}
+@keyframes orbit { to { --angle: 360deg; } }
+
+/* Periodic diagonal light sweep across every panel */
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / .09) 48%, rgb(255 255 255 / .16) 50%, transparent 62%);
+  transform: translateX(-110%);
+  animation: sweep 9s ease-in-out infinite;
+  animation-delay: var(--sweep-delay, 2s);
+  pointer-events: none;
+}
+@keyframes sweep { 0%, 82% { transform: translateX(-110%); } 100% { transform: translateX(110%); } }
+
+/* Scan-glitch flicker, triggered from JS by adding .glitch */
+.glitch { animation: glitch .45s steps(2) 1; }
+@keyframes glitch {
+  0% { transform: translate(0); filter: none; }
+  20% { transform: translate(-4px, 1px) skewX(-8deg); filter: drop-shadow(3px 0 0 #0ff) drop-shadow(-3px 0 0 #f0f); clip-path: inset(10% 0 40% 0); }
+  40% { transform: translate(3px, -1px); filter: drop-shadow(-3px 0 0 #0ff) drop-shadow(3px 0 0 #f0f); clip-path: inset(50% 0 5% 0); }
+  60% { transform: translate(-2px, 0) skewX(6deg); clip-path: inset(0 0 70% 0); }
+  80% { transform: translate(2px, 1px); clip-path: none; }
+  100% { transform: none; filter: none; }
+}
+
+/* "+1" style floating labels (fx.floatText) */
+.float-text {
+  position: fixed;
+  z-index: 60;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 44px;
+  color: #fff;
+  text-shadow: 0 0 12px var(--s), 0 0 28px var(--p);
+  pointer-events: none;
+  animation: float-up 1.8s var(--ease-out) forwards;
+}
+@keyframes float-up {
+  0% { opacity: 0; transform: translate(-50%, -20%) scale(.5); }
+  15% { opacity: 1; transform: translate(-50%, -60%) scale(1.25); }
+  100% { opacity: 0; transform: translate(-50%, -220%) scale(1); }
+}
+
+/* Full-screen flash (lightning / celebration) */
+.flash {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--fx, 50%) var(--fy, 30%), rgb(255 255 255 / .55), color-mix(in oklab, var(--p) 30%, transparent) 40%, transparent 70%);
+  opacity: 0;
+}
+.flash.is-on { animation: flash .9s ease-out; }
+@keyframes flash { 0% { opacity: 0; } 8% { opacity: 1; } 16% { opacity: .2; } 24% { opacity: .8; } 100% { opacity: 0; } }
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--p) 55%, white);
+}
+
+.grad-text {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Live badge ---------- */
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 10px;
+  background: var(--live);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: .14em;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+.live::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  animation: blink 1.6s ease-in-out infinite;
+}
+@keyframes blink { 50% { opacity: .25; } }
+
+/* ---------- Webcam frame (the middle is transparent; put the camera under it) ---------- */
+.cam {
+  position: absolute;
+  width: 480px;
+  height: 270px;
+}
+.cam__border {
+  position: absolute;
+  inset: -5px;
+  padding: 3px;
+  background:
+    conic-gradient(from var(--angle), transparent 0 55%, var(--p) 70%, #fff 78%, var(--s) 86%, transparent 96%),
+    linear-gradient(135deg, color-mix(in oklab, var(--p) 60%, transparent), color-mix(in oklab, var(--s) 60%, transparent));
+  clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 8px var(--p));
+  animation: orbit 4s linear infinite;
+}
+/* Soft outer halo that breathes */
+.cam::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  background: radial-gradient(closest-side, transparent 88%, color-mix(in oklab, var(--p) 35%, transparent));
+  filter: blur(14px);
+  animation: breathe 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes breathe { 50% { opacity: .35; transform: scale(1.02); } }
+.cam__corner {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 0 solid var(--s);
+  filter: drop-shadow(0 0 6px var(--s));
+  animation: corner 2.4s ease-in-out infinite;
+}
+@keyframes corner { 50% { transform: var(--out); filter: drop-shadow(0 0 14px var(--s)); } }
+.cam__corner--tl { top: -12px; left: -12px; border-top-width: 3px; border-left-width: 3px; --out: translate(-5px, -5px); }
+.cam__corner--tr { top: -12px; right: -12px; border-top-width: 3px; border-right-width: 3px; --out: translate(5px, -5px); }
+.cam__corner--bl { bottom: -12px; left: -12px; border-bottom-width: 3px; border-left-width: 3px; --out: translate(-5px, 5px); }
+.cam__corner--br { bottom: -12px; right: -12px; border-bottom-width: 3px; border-right-width: 3px; --out: translate(5px, 5px); }
+.cam__tag {
+  position: absolute;
+  top: 10px;
+  left: 30px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 700 12px var(--font-display);
+  letter-spacing: .24em;
+  color: #fff;
+  text-shadow: 0 0 6px var(--p);
+  opacity: .85;
+}
+.cam__tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--live); box-shadow: 0 0 8px var(--live); animation: blink 1.2s steps(1) infinite; }
+.cam__scan {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+}
+.cam__scan::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--p) 10%, transparent), transparent);
+  animation: scan 7s linear infinite;
+}
+@keyframes scan { from { transform: translateY(-100%); } to { transform: translateY(260%); } }
+
+/* ---------- Name plate ---------- */
+.plate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  --cut: 12px;
+}
+.plate__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: .06em;
+  line-height: 1;
+}
+.plate__handle { color: var(--muted); font-size: 15px; font-weight: 500; }
+
+/* ---------- Info chip (current game etc.) ---------- */
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  --cut: 12px;
+}
+.chip svg { width: 22px; height: 22px; color: var(--s); flex: none; }
+.chip__label { font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.chip__value { font-family: var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: .03em; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- Goal bar ---------- */
+.goal { padding: 12px 18px 14px; --cut: 12px; }
+.goal__top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+.goal__label { font-family: var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: .12em; text-transform: uppercase; }
+.goal__count { font-family: var(--font-display); font-weight: 600; font-size: 17px; color: var(--soft); font-variant-numeric: tabular-nums; }
+.goal__count b { color: var(--text); font-weight: 700; }
+.goal__track { position: relative; height: 10px; }
+.goal__track::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in oklab, var(--bg) 60%, white 12%);
+  clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
+}
+@property --pct { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
+.goal { transition: --pct 1.6s var(--ease-out); }
+.goal__fill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: polygon(5px 0, var(--pct, 0%) 0, calc(var(--pct, 0%) - 5px) 100%, 0 100%);
+}
+/* Moving energy stripes inside the fill */
+.goal__fill::before {
+  content: "";
+  position: absolute;
+  inset: 0 -40px 0 0;
+  background:
+    repeating-linear-gradient(115deg, rgb(255 255 255 / .22) 0 8px, transparent 8px 20px),
+    var(--grad);
+  animation: stripes 1s linear infinite;
+}
+@keyframes stripes { to { transform: translateX(21.8px); } }
+.goal__fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .55), transparent);
+  animation: shimmer 2.6s ease-in-out infinite;
+}
+@keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+/* Glowing spark at the tip of the progress */
+.goal__tip {
+  position: absolute;
+  top: 50%;
+  left: var(--pct, 0%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px #fff, 0 0 22px var(--s), 0 0 40px var(--p);
+  transform: translate(-60%, -50%);
+  animation: tip 1.2s ease-in-out infinite;
+}
+@keyframes tip { 50% { transform: translate(-60%, -50%) scale(.6); opacity: .7; } }
+.goal.is-bump { animation: bump .7s var(--ease-out); }
+@keyframes bump { 30% { transform: scale(1.05); filter: brightness(1.5) drop-shadow(0 0 18px var(--s)); } }
+.goal.is-reached { animation: reached 2.4s ease-in-out infinite; }
+@keyframes reached { 50% { filter: drop-shadow(0 0 16px var(--success)) brightness(1.15); } }
+.goal.is-reached .goal__label::after { content: "  ✓ reached"; color: var(--success); }
+
+/* ---------- Rotating text ---------- */
+.rotate { position: relative; }
+.rotate.is-in > * { animation: rotate-in .7s var(--ease-out) both; }
+@keyframes rotate-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Socials ---------- */
+.social { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+.social svg { width: 22px; height: 22px; flex: none; }
+.social--youtube svg { color: #ff0033; }
+.social--discord svg { color: #5865f2; }
+.social--instagram svg { color: #e1306c; }
+.social--whatsapp svg { color: #25d366; }
+.social--linktree svg { color: #43e660; }
+
+/* ---------- Entrance ---------- */
+.enter { animation: enter .9s var(--ease-out) both; animation-delay: var(--d, 0s); }
+@keyframes enter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* Shown only in ?bg preview mode when the overlay server stops (never on stream) */
+.offline-note { display: none; }
+html.preview-bg[data-offline="true"] .offline-note {
+  display: block;
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  padding: 8px 14px;
+  background: #b91c1c;
+  color: #fff;
+  font: 600 16px var(--font-body);
+}

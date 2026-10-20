@@ -6,6 +6,8 @@ The official website for the YouTube channel **DePhantom தமிழ்** ([@Im
 - **A private admin dashboard** at `/admin` lets you edit everything else: text, buttons, games, schedule, subscriber goal, social links, colours, section order, SEO and images.
 - **Built to keep running.** If YouTube or the database has a problem, visitors still see the last good version of the site.
 
+> **Streaming?** The OBS overlay (scenes, control panel, alerts, chat) lives in [`overlay/`](overlay/README.md). Start it with `npm run overlay`.
+
 > Returning after a while? Start with [Day-to-day use](#day-to-day-use), then [Troubleshooting](#troubleshooting).
 
 ---

@@ -1,0 +1,56 @@
+{
+  "theme": {
+    "primary": "#a855f7",
+    "secondary": "#e04bff",
+    "background": "#0a0a0f",
+    "motion": 1
+  },
+  "channel": {
+    "name": "DePhantom",
+    "handle": "@ImDePhantom"
+  },
+  "stream": {
+    "title": "Late night boss fights",
+    "game": "Elden Ring",
+    "topic": "Chilling with chat"
+  },
+  "countdown": {
+    "target": null,
+    "minutes": 10
+  },
+  "screens": {
+    "starting": { "heading": "Starting Soon", "sub": "Grab a snack, the stream is about to begin" },
+    "brb": { "heading": "Be Right Back", "sub": "Don't go anywhere, I'll be back in a moment" },
+    "ending": { "heading": "Thanks for watching", "sub": "See you in the next stream", "nextStream": "Every night · 9:00 PM" }
+  },
+  "goal": {
+    "show": true,
+    "label": "Road to 1,652",
+    "start": 1352,
+    "current": 1352,
+    "target": 1652,
+    "autoFromSite": false,
+    "siteUrl": "http://localhost:8888"
+  },
+  "socials": [
+    { "platform": "youtube", "handle": "@ImDePhantom", "show": true },
+    { "platform": "discord", "handle": "discord.gg/RdwRFEeb8K", "show": true },
+    { "platform": "instagram", "handle": "Instagram channel", "show": true },
+    { "platform": "whatsapp", "handle": "WhatsApp channel", "show": true },
+    { "platform": "linktree", "handle": "linktr.ee/dephantomtamil", "show": true }
+  ],
+  "ticker": [
+    "Subscribe and turn on notifications so you never miss a stream",
+    "Join the Discord to play together: discord.gg/RdwRFEeb8K",
+    "Live every night at 9:00 PM",
+    "Super Chats and memberships help keep the stream going. Thank you!"
+  ],
+  "layout": {
+    "camCorner": "top-right",
+    "showCam": true,
+    "showGoal": true,
+    "showTicker": true,
+    "showGame": true,
+    "showClock": false
+  }
+}

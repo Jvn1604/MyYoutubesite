@@ -22,7 +22,8 @@
     "admin:create": "node --env-file-if-exists=.env scripts/create-admin.js",
     "backup": "node --env-file-if-exists=.env scripts/backup.js export",
     "restore": "node --env-file-if-exists=.env scripts/backup.js restore",
-    "icons": "node scripts/make-icons.js"
+    "icons": "node scripts/make-icons.js",
+    "overlay": "node overlay/server.js"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.3.16",

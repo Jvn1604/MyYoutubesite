@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DePhantom · Just Chatting</title>
+<link rel="stylesheet" href="/shared/overlay.css">
+<style>
+  /* Layout (1920×1080):
+       webcam hole   x 48,  y 48,  1280×720
+       chat area     x 1376, y 104, 496×716   (put the StreamElements chat widget here)
+       goal          bottom-right
+       title + info  under the webcam                                          */
+  .bg { position: absolute; inset: 0; background: var(--bg); overflow: hidden; }
+  .bg::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background:
+      radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--p) 35%, transparent), transparent 40%),
+      radial-gradient(circle at 85% 80%, color-mix(in oklab, var(--s) 28%, transparent), transparent 45%);
+    animation: bg-drift 30s ease-in-out infinite alternate;
+  }
+  @keyframes bg-drift { to { transform: translate(6%, -4%) rotate(6deg); } }
+  .bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(255 255 255 / .035) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(0deg, rgb(255 255 255 / .035) 1px, transparent 1px) 0 0 / 48px 48px;
+  }
+
+  #field { position: absolute; inset: 0; width: 1920px; height: 1080px; opacity: .8; }
+  .beam { position: absolute; top: -300px; width: 300px; height: 1600px; background: linear-gradient(180deg, color-mix(in oklab, var(--p) 35%, transparent), transparent 70%); filter: blur(40px); transform-origin: 50% 0; animation: beam 13s ease-in-out infinite alternate; }
+  .beam--a { left: 1500px; }
+  .beam--b { left: 300px; background: linear-gradient(180deg, color-mix(in oklab, var(--s) 30%, transparent), transparent 70%); animation-duration: 17s; animation-direction: alternate-reverse; }
+  @keyframes beam { from { transform: rotate(25deg); } to { transform: rotate(-25deg); } }
+  .eqmini { display: inline-flex; align-items: flex-end; gap: 3px; height: 18px; margin-right: 12px; }
+  .eqmini i { width: 4px; height: 100%; background: var(--grad); transform-origin: bottom; animation: eqm var(--t) ease-in-out infinite alternate; }
+  @keyframes eqm { from { transform: scaleY(.15); } to { transform: scaleY(1); } }
+  .chat { --orbit-delay: -2s; }
+  .goal { --orbit-delay: -4s; }
+  .info { --orbit: 9s; }
+  .goal.is-bump { animation: bump .7s var(--ease-out); }
+
+  .cam { left: 48px; top: 48px; width: 1280px; height: 720px; }
+  /* The camera hole must stay see-through: punch it out of the background
+     (same clipped corners as the frame, so the camera's corners are hidden too) */
+  .bg { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 68px, 48px 68px, 48px 768px, 1308px 768px, 1328px 748px, 1328px 48px, 68px 48px, 48px 68px, 0 68px); }
+
+  .chat { position: absolute; left: 1376px; top: 48px; width: 496px; height: 772px; display: flex; flex-direction: column; }
+  .chat__head { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid color-mix(in oklab, var(--p) 30%, transparent); }
+  .chat__head svg { width: 22px; height: 22px; color: var(--s); }
+  .chat__title { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: .16em; text-transform: uppercase; }
+
+  .goal { position: absolute; left: 1376px; top: 844px; width: 496px; padding: 18px 22px 20px; }
+  .goal .goal__label { font-size: 20px; }
+  .goal .goal__count { font-size: 20px; }
+  .goal .goal__track { height: 14px; }
+  .goal__hint { margin-top: 12px; font-size: 15px; color: var(--muted); }
+
+  .info { position: absolute; left: 48px; top: 796px; width: 1280px; height: 236px; padding: 22px 34px; display: flex; flex-direction: column; gap: 6px; --cut: 22px; }
+  .info__top { display: flex; align-items: baseline; gap: 14px; min-width: 0; }
+  .info__topic { font-size: 20px; color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .info__h { margin: 0; flex: none; font-family: var(--font-display); font-weight: 700; font-size: 48px; line-height: 1.1; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .info__socials { display: flex; gap: 36px; margin-top: 10px; font-family: var(--font-display); font-weight: 600; font-size: 21px; }
+  .info__tick { margin-top: 8px; font-size: 17px; color: var(--muted); min-height: 24px; }
+</style>
+</head>
+<body>
+  <div class="bg">
+    <div class="beam beam--a"></div>
+    <div class="beam beam--b"></div>
+    <canvas id="field"></canvas>
+  </div>
+
+  <div class="cam enter">
+    <div class="cam__scan"></div>
+    <div class="cam__border"></div>
+    <span class="cam__tag">Cam</span>
+    <span class="cam__corner cam__corner--tl"></span>
+    <span class="cam__corner cam__corner--tr"></span>
+    <span class="cam__corner cam__corner--bl"></span>
+    <span class="cam__corner cam__corner--br"></span>
+  </div>
+
+  <section class="chat panel enter" style="--d:.15s">
+    <div class="chat__head">
+      <span class="chat__title"><span id="chatIcon"></span>Live chat</span>
+      <span style="display:flex;align-items:center"><span class="eqmini"><i style="--t:.4s"></i><i style="--t:.7s"></i><i style="--t:.5s"></i><i style="--t:.8s"></i></span><span class="live">LIVE</span></span>
+    </div>
+  </section>
+
+  <section class="info panel enter" style="--d:.25s">
+    <div class="info__top"><span class="eyebrow">Just chatting</span><span class="info__topic" id="topic"></span></div>
+    <h1 class="info__h grad-text" id="title"></h1>
+    <div class="info__socials" id="socials"></div>
+    <div class="info__tick rotate" id="tick" data-show="layout.showTicker"></div>
+  </section>
+
+  <section class="goal panel enter" id="goal" style="--d:.35s" data-show="layout.showGoal">
+    <div class="goal__top"><span class="goal__label"></span><span class="goal__count"></span></div>
+    <div class="goal__track"><div class="goal__fill"></div></div>
+    <div class="goal__hint">Subscribe to help reach the goal</div>
+  </section>
+
+  <div class="offline-note">Overlay server not running · start it with: npm run overlay</div>
+
+<script type="module">
+  import { connect, icon, rotator, renderGoal, escapeHtml, visibleSocials, socialHtml } from "/shared/overlay.js";
+  import { scramble, particleField, burst, floatText, replay } from "/shared/fx.js";
+
+  if (new URLSearchParams(location.search).has("bg")) document.documentElement.classList.add("preview-bg");
+  const $ = (id) => document.getElementById(id);
+  $("chatIcon").innerHTML = icon("users");
+  particleField($("field"), { count: 70, speed: .7 });
+  const setTick = rotator($("tick"), {
+    interval: 9000,
+    render: (t) => `<span>${escapeHtml(t)}</span>`,
+    after: (el, t) => scramble(el.firstElementChild, t, { duration: 700 }),
+  });
+
+  let lastTitle, lastTopic;
+  connect({
+    onState(state) {
+      const gained = renderGoal($("goal"), state);
+      if (gained > 0) {
+        replay($("goal"), "is-bump");
+        const tip = $("goal").querySelector(".goal__tip").getBoundingClientRect();
+        burst(tip.left + tip.width / 2, tip.top + tip.height / 2, { count: 70, power: 8 });
+        floatText(tip.left, tip.top - 10, `+${gained}`);
+      }
+      const title = state.stream?.title ?? "", topic = state.stream?.topic ?? "";
+      if (title !== lastTitle) { lastTitle = title; scramble($("title"), title, { duration: 1100 }); }
+      if (topic !== lastTopic) { lastTopic = topic; scramble($("topic"), topic, { duration: 800 }); }
+      $("socials").innerHTML = visibleSocials(state).slice(0, 4).map(socialHtml).join("");
+      setTick(state.ticker ?? []);
+    },
+  });
+</script>
+</body>
+</html>

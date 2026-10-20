@@ -4,8 +4,19 @@
     {
       "name": "dephantom-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 8888
+    },
+    {
+      "name": "overlay",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "overlay/server.js"
+      ],
+      "port": 7777
     }
   ]
 }

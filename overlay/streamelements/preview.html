@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Widget preview</title>
+<!--
+  Local preview of the StreamElements widgets with fake events, so you can tweak the
+  design without going live:
+    /streamelements/preview.html?widget=alerts
+    /streamelements/preview.html?widget=chat   (shown inside the Just Chatting scene)
+  Add &bg for a fake game background.
+-->
+<style>
+  html, body { margin: 0; height: 100%; }
+  html.preview-bg body { background: radial-gradient(circle at 30% 40%, #2a3a2a, transparent 60%), radial-gradient(circle at 70% 70%, #3a2a1a, transparent 55%), #151515; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; }
+  #frame { position: absolute; inset: 0; }
+  /* Chat preview sits in the chat area of the Just Chatting scene */
+  #scene { position: absolute; inset: 0; width: 1920px; height: 1080px; border: 0; }
+  [data-widget="chat"] #frame { inset: 104px auto auto 1376px; width: 496px; height: 716px; }
+</style>
+</head>
+<body>
+<div id="frame"></div>
+<script type="module">
+  const params = new URLSearchParams(location.search);
+  const name = params.get("widget") === "chat" ? "chat" : "alerts";
+  if (params.has("bg")) document.documentElement.classList.add("preview-bg");
+  document.body.dataset.widget = name;
+  if (name === "chat") {
+    const scene = Object.assign(document.createElement("iframe"), { id: "scene", src: "/scenes/chatting.html?bg" });
+    document.body.prepend(scene);
+  }
+
+  const base = `/streamelements/${name}/`;
+  const [html, css, js, fieldsJson] = await Promise.all(
+    ["widget.html", "widget.css", "widget.js", "fields.json"].map((f) => fetch(base + f).then((r) => r.text())));
+
+  const style = document.createElement("style");
+  style.textContent = css;
+  document.head.append(style);
+  document.getElementById("frame").innerHTML = html;
+  const script = document.createElement("script");
+  script.textContent = js;
+  document.body.append(script);
+
+  // Field defaults, the same values StreamElements would pass in
+  const fieldData = Object.fromEntries(Object.entries(JSON.parse(fieldsJson)).map(([k, f]) => [k, f.value]));
+  const emit = (type, detail) => window.dispatchEvent(new CustomEvent(type, { detail }));
+  emit("onWidgetLoad", { fieldData, currency: { code: "MYR", symbol: "RM" } });
+
+  const press = (field) => emit("onEventReceived", { listener: "widget-button", event: { field } });
+  if (name === "alerts") {
+    const tests = ["testSub", "testMember", "testSuperchat", "testGift", "testTip"];
+    tests.forEach(press);
+    setInterval(() => tests.forEach(press), 60_000);
+  } else {
+    const lines = [
+      ["PhantomFan", "Let's gooo! First try this time 🔥", {}],
+      ["SoulsVeteran", "Roll through the second swing, it's delayed", { isChatSponsor: true }],
+      ["ModSquad", "Reminder: no spoilers please", { isChatModerator: true }],
+      ["DePhantom", "Okay chat, one more try 😤", { isChatOwner: true }],
+      ["Maidenless", "this boss is actually insane", {}],
+      ["Nightbot", "Join the Discord: discord.gg/RdwRFEeb8K", {}],
+      ["TarnishedOne", "!discord", {}],
+      ["LurkerKing", "first time catching the stream live, hello from Chennai!", {}],
+    ];
+    let i = 0;
+    const next = () => {
+      const [displayName, text, authorDetails] = lines[i++ % lines.length];
+      emit("onEventReceived", { listener: "message", event: { data: { displayName, text, authorDetails, msgId: String(i), userId: displayName } } });
+    };
+    for (let n = 0; n < 6; n++) next();
+    setInterval(next, 1800);
+  }
+</script>
+</body>
+</html>

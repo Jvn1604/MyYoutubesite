@@ -1,0 +1,34 @@
+{
+  "testSub": { "type": "button", "label": "Test: new subscriber", "group": "Test" },
+  "testMember": { "type": "button", "label": "Test: new member", "group": "Test" },
+  "testGift": { "type": "button", "label": "Test: gifted memberships", "group": "Test" },
+  "testSuperchat": { "type": "button", "label": "Test: Super Chat", "group": "Test" },
+  "testTip": { "type": "button", "label": "Test: tip", "group": "Test" },
+
+  "primary": { "type": "colorpicker", "label": "Primary colour", "value": "#a855f7", "group": "Look" },
+  "secondary": { "type": "colorpicker", "label": "Secondary colour", "value": "#e04bff", "group": "Look" },
+  "background": { "type": "colorpicker", "label": "Card background", "value": "#0a0a0f", "group": "Look" },
+  "scale": { "type": "slider", "label": "Size (%)", "value": 100, "min": 50, "max": 150, "step": 5, "group": "Look" },
+
+  "duration": { "type": "number", "label": "Seconds on screen", "value": 7, "min": 3, "max": 30, "group": "Timing" },
+  "gap": { "type": "number", "label": "Seconds between alerts", "value": 1, "min": 0, "max": 10, "group": "Timing" },
+  "showMessages": { "type": "checkbox", "label": "Show Super Chat / tip messages", "value": true, "group": "Timing" },
+  "volume": { "type": "slider", "label": "Sound volume", "value": 50, "min": 0, "max": 100, "step": 1, "group": "Timing" },
+
+  "subEnabled": { "type": "checkbox", "label": "Enable", "value": true, "group": "New subscriber" },
+  "subTitle": { "type": "text", "label": "Title", "value": "New subscriber", "group": "New subscriber" },
+  "subSound": { "type": "sound-input", "label": "Sound", "value": "", "group": "New subscriber" },
+
+  "memberEnabled": { "type": "checkbox", "label": "Enable", "value": true, "group": "Members" },
+  "memberTitle": { "type": "text", "label": "Title", "value": "New member", "group": "Members" },
+  "giftTitle": { "type": "text", "label": "Gift title", "value": "Gifted memberships", "group": "Members" },
+  "memberSound": { "type": "sound-input", "label": "Sound", "value": "", "group": "Members" },
+
+  "superchatEnabled": { "type": "checkbox", "label": "Enable", "value": true, "group": "Super Chat" },
+  "superchatTitle": { "type": "text", "label": "Title", "value": "Super Chat", "group": "Super Chat" },
+  "superchatSound": { "type": "sound-input", "label": "Sound", "value": "", "group": "Super Chat" },
+
+  "tipEnabled": { "type": "checkbox", "label": "Enable", "value": true, "group": "Tips" },
+  "tipTitle": { "type": "text", "label": "Title", "value": "Tip", "group": "Tips" },
+  "tipSound": { "type": "sound-input", "label": "Sound", "value": "", "group": "Tips" }
+}

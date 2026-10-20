@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@600;700&display=block");
+
+:root {
+  --p: #a855f7;
+  --s: #e04bff;
+  --bg: #0a0a0f;
+  --size: 20px;
+  --panel-alpha: 72%;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+
+.chat {
+  height: 100%;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: var(--size);
+  color: #ececf3;
+  overflow: hidden;
+  /* Older messages fade out at the top */
+  -webkit-mask: linear-gradient(transparent, #000 12%);
+  mask: linear-gradient(transparent, #000 12%);
+}
+
+.msg {
+  --role: color-mix(in oklab, var(--p) 55%, white);
+  position: relative;
+  flex: none;
+  padding: .45em .8em .5em 1em;
+  background: color-mix(in oklab, var(--bg) var(--panel-alpha), transparent);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  animation: msg-in .5s var(--ease-out) both;
+}
+.msg::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--role);
+}
+.msg.is-out { animation: msg-out .5s ease-in both; }
+@keyframes msg-in {
+  0% { opacity: 0; transform: translateX(60px) skewX(-12deg); clip-path: polygon(0 0, 0 0, 0 100%, 0 100%, 0 100%); filter: brightness(2.5); }
+  40% { opacity: 1; filter: brightness(1.6) drop-shadow(-4px 0 0 #0ff) drop-shadow(4px 0 0 #f0f); }
+  70% { transform: translateX(-4px); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+/* Light flash travelling along the accent bar of each new message */
+.msg::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 40%;
+  background: #fff;
+  box-shadow: 0 0 10px #fff, 0 0 18px var(--role);
+  animation: bar-flash 1.1s .2s ease-out both;
+}
+@keyframes bar-flash { from { transform: translateY(-100%); opacity: 1; } to { transform: translateY(260%); opacity: 0; } }
+@keyframes msg-out { to { opacity: 0; transform: translateX(-20px); } }
+
+.msg[data-role="owner"] { --role: var(--s); background: color-mix(in oklab, var(--s) 18%, color-mix(in oklab, var(--bg) var(--panel-alpha), transparent)); box-shadow: inset 0 0 24px color-mix(in oklab, var(--s) 25%, transparent); }
+.msg[data-role="mod"] { --role: #60a5fa; }
+.msg[data-role="member"] { --role: #34d399; }
+
+.msg__head { display: flex; align-items: center; gap: .35em; margin-bottom: .1em; }
+.msg__badges { display: inline-flex; gap: 3px; }
+.msg__badges img { height: 1em; width: auto; }
+.msg__name {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-size: 1.05em;
+  letter-spacing: .02em;
+  color: var(--role);
+}
+.msg__tag {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-size: .62em;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .05em .45em;
+  background: var(--role);
+  color: #0a0a0f;
+}
+.msg__text { color: #dcdce6; }
+.msg__text img { height: 1.5em; vertical-align: middle; margin: -.2em .05em; }
+.msg.is-action .msg__text { font-style: italic; color: var(--role); }

@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DePhantom · Screen</title>
+<link rel="stylesheet" href="/shared/overlay.css">
+<style>
+  /* ================= Background layers ================= */
+  .bg { position: absolute; inset: 0; background: var(--bg); overflow: hidden; }
+  .orb { position: absolute; width: 1100px; height: 1100px; border-radius: 50%; filter: blur(130px); opacity: .42; }
+  .orb--a { background: var(--p); left: -300px; top: -420px; animation: drift-a 26s ease-in-out infinite alternate; }
+  .orb--b { background: var(--s); right: -380px; bottom: -520px; opacity: .3; animation: drift-b 32s ease-in-out infinite alternate; }
+  @keyframes drift-a { to { transform: translate(380px, 260px) scale(1.15); } }
+  @keyframes drift-b { to { transform: translate(-420px, -200px) scale(.9); } }
+
+  /* Searchlight beams sweeping up from below */
+  .beam {
+    position: absolute;
+    bottom: -200px;
+    left: 50%;
+    width: 260px;
+    height: 1500px;
+    margin-left: -130px;
+    transform-origin: 50% 100%;
+    background: linear-gradient(0deg, color-mix(in oklab, var(--p) 45%, transparent), transparent 75%);
+    filter: blur(30px);
+    opacity: .5;
+    mix-blend-mode: screen;
+  }
+  .beam--a { animation: beam-a 11s ease-in-out infinite alternate; }
+  .beam--b { background: linear-gradient(0deg, color-mix(in oklab, var(--s) 45%, transparent), transparent 75%); animation: beam-b 14s ease-in-out infinite alternate; }
+  @keyframes beam-a { from { transform: rotate(-38deg); } to { transform: rotate(14deg); } }
+  @keyframes beam-b { from { transform: rotate(36deg); } to { transform: rotate(-12deg); } }
+
+  /* Synthwave floor scrolling towards the viewer */
+  .floor {
+    position: absolute; left: -50%; right: -50%; bottom: -12%; height: 40%;
+    transform: perspective(500px) rotateX(64deg); transform-origin: bottom;
+    -webkit-mask: linear-gradient(transparent, #000 60%); mask: linear-gradient(transparent, #000 60%);
+    opacity: .75;
+  }
+  .floor::before {
+    content: ""; position: absolute; inset: -80px 0 0;
+    background:
+      linear-gradient(90deg, color-mix(in oklab, var(--p) 75%, transparent) 2px, transparent 2px) 0 0 / 80px 80px,
+      linear-gradient(0deg, color-mix(in oklab, var(--s) 75%, transparent) 2px, transparent 2px) 0 0 / 80px 80px;
+    animation: floor 1.6s linear infinite;
+  }
+  @keyframes floor { to { transform: translateY(80px); } }
+  .horizon { position: absolute; left: 0; right: 0; top: 74%; height: 3px; background: var(--grad); box-shadow: 0 0 30px 6px var(--p); opacity: .7; }
+
+  #field { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+
+  /* Rotating sigil behind the heading */
+  .sigil { position: absolute; left: 50%; top: 44%; width: 1000px; height: 1000px; margin: -500px 0 0 -500px; opacity: .55; }
+  .sigil svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .sigil .r1 { animation: spin 60s linear infinite; }
+  .sigil .r2 { animation: spin 40s linear infinite reverse; }
+  .sigil .r3 { animation: spin 90s linear infinite; }
+  .sigil .r4 { animation: spin 22s linear infinite reverse; }
+  .sigil circle, .sigil polygon, .sigil path { fill: none; stroke: var(--p); vector-effect: non-scaling-stroke; }
+  .sigil .glow { filter: drop-shadow(0 0 6px var(--s)); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .sigil-pulse { animation: sigil-pulse 5s ease-in-out infinite; transform-origin: center; }
+  @keyframes sigil-pulse { 50% { opacity: .55; transform: scale(1.03); } }
+
+  .noise { position: absolute; inset: -50%; opacity: .07; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: noise .5s steps(4) infinite; }
+  @keyframes noise { 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -1%); } }
+  .scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgb(0 0 0 / .16) 0 2px, transparent 2px 4px); }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgb(0 0 0 / .75)); }
+
+  /* ================= Top bar ================= */
+  .top { position: absolute; top: 56px; left: 80px; right: 80px; display: flex; justify-content: space-between; align-items: center; z-index: 2; }
+  .brand { display: flex; align-items: center; gap: 18px; }
+  .emblem { position: relative; width: 50px; height: 50px; }
+  .emblem i { position: absolute; inset: 0; background: var(--grad); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+  .emblem i:nth-child(2) { inset: 12px; background: var(--bg); }
+  .emblem i:nth-child(3) { inset: 18px; animation: emblem 2s ease-in-out infinite; }
+  .emblem { animation: spin 12s linear infinite; filter: drop-shadow(0 0 10px var(--p)); }
+  @keyframes emblem { 50% { transform: scale(.4); } }
+  .brand__name { font-family: var(--font-display); font-weight: 700; font-size: 34px; letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 0 18px color-mix(in oklab, var(--p) 60%, transparent); }
+  .clock { font-family: var(--font-display); font-weight: 600; font-size: 26px; color: var(--soft); font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+
+  /* ================= Centre ================= */
+  .center { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; text-align: center; padding-bottom: 110px; z-index: 2; }
+  .eyebrow-row { display: flex; align-items: center; gap: 22px; }
+  .eyebrow-row .eyebrow { font-size: 20px; letter-spacing: .4em; }
+  .eyebrow-row .line { width: 140px; height: 2px; background: var(--grad); transform-origin: right; animation: line-in 1.2s .3s var(--ease-out) both; box-shadow: 0 0 10px var(--p); }
+  .eyebrow-row .line:last-child { transform-origin: left; background: linear-gradient(-135deg, var(--p), var(--s)); }
+  @keyframes line-in { from { transform: scaleX(0); } }
+
+  .heading {
+    margin: 14px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 176px;
+    line-height: .92;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  [data-mode="ending"] .heading { font-size: 140px; }
+  .heading .ch {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--p), #fff 45%, var(--s) 55%, var(--p));
+    background-size: 400% 100%;
+    background-position: calc(var(--i) * 6%) 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 22px color-mix(in oklab, var(--p) 70%, transparent));
+    animation:
+      letter-in .9s var(--ease-out) both calc(var(--i) * 55ms + .25s),
+      wave 3.6s ease-in-out infinite calc(var(--i) * 110ms + 1.6s),
+      shine 6s linear infinite;
+  }
+  .heading .sp { display: inline-block; width: .3em; }
+  @keyframes letter-in {
+    0% { opacity: 0; transform: translateY(-120px) rotateX(90deg) scale(1.6); filter: blur(14px); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes wave { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(-14px); } }
+  @keyframes shine { to { background-position: calc(var(--i) * 6% + 400%) 0; } }
+  .heading.glitch .ch { animation-play-state: paused; }
+
+  .sub { margin: 26px 0 0; font-size: 30px; font-weight: 500; color: var(--soft); max-width: 1200px; min-height: 1.4em; animation: enter 1s .9s var(--ease-out) both; }
+
+  /* Countdown */
+  .timer { margin-top: 44px; padding: 20px 52px 22px; --cut: 22px; min-width: 420px; --orbit: 3s; }
+  .timer__value { display: flex; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 112px; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+  .digit { position: relative; display: inline-block; width: .58em; text-align: center; color: #fff; text-shadow: 0 0 22px var(--p), 0 0 44px var(--s); }
+  .digit.colon { width: .3em; animation: colon 1s steps(1) infinite; }
+  @keyframes colon { 50% { opacity: .25; } }
+  .digit.roll { animation: roll .45s var(--ease-out); }
+  @keyframes roll { from { transform: translateY(-35%) scaleY(.7); filter: blur(4px); } }
+  .timer__bar { position: relative; height: 4px; margin: 14px 0 10px; background: rgb(255 255 255 / .08); overflow: hidden; }
+  .timer__bar i { position: absolute; inset: 0; background: var(--grad); transform-origin: left; box-shadow: 0 0 12px var(--s); transition: transform .3s linear; }
+  .timer.is-final .digit { color: #ffd1d1; text-shadow: 0 0 22px var(--live), 0 0 50px var(--live); }
+  .timer.is-final { animation: heartbeat 1s ease-in-out infinite; }
+  @keyframes heartbeat { 15% { transform: scale(1.06); } 30% { transform: scale(.99); } 45% { transform: scale(1.03); } }
+
+  /* Waiting (no timer): orbiting diamonds */
+  .orbiter { position: relative; width: 120px; height: 120px; margin-top: 50px; animation: spin 2.4s linear infinite; }
+  .orbiter span { position: absolute; left: 50%; top: 0; width: 22px; height: 22px; margin-left: -11px; background: var(--grad); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); transform-origin: 11px 60px; filter: drop-shadow(0 0 8px var(--s)); }
+  .orbiter span:nth-child(2) { transform: rotate(120deg); opacity: .7; }
+  .orbiter span:nth-child(3) { transform: rotate(240deg); opacity: .4; }
+
+  .playing { margin-top: 38px; display: flex; gap: 20px; animation: enter 1s 1.2s var(--ease-out) both; }
+  .playing .chip { padding: 14px 26px; --orbit-delay: -3s; }
+  .playing .chip__value { font-size: 30px; max-width: 700px; }
+
+  .next { margin-top: 44px; display: flex; align-items: center; gap: 22px; padding: 24px 44px; --cut: 18px; animation: enter 1s 1s var(--ease-out) both; }
+  .next svg { width: 44px; height: 44px; color: var(--s); filter: drop-shadow(0 0 8px var(--s)); }
+  .next__value { font-family: var(--font-display); font-weight: 700; font-size: 46px; letter-spacing: .03em; }
+
+  /* ================= Bottom ================= */
+  .eq { position: absolute; left: 0; right: 0; bottom: 0; height: 160px; display: flex; align-items: flex-end; gap: 6px; padding: 0 6px; opacity: .45; -webkit-mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); }
+  .eq i { flex: 1; height: 100%; background: linear-gradient(0deg, var(--p), var(--s) 70%, transparent); transform-origin: bottom; animation: eq var(--t) ease-in-out infinite alternate; animation-delay: var(--d); }
+  @keyframes eq { from { transform: scaleY(.06); } to { transform: scaleY(var(--h)); } }
+  [data-mode="ending"] .eq i { animation-duration: calc(var(--t) * 2.5); }
+
+  .bottom { position: absolute; left: 80px; right: 80px; bottom: 52px; display: flex; flex-direction: column; gap: 22px; align-items: center; z-index: 2; animation: enter 1s 1.4s var(--ease-out) both; }
+  .socials { display: flex; gap: 18px; font-family: var(--font-display); font-weight: 600; font-size: 24px; letter-spacing: .03em; }
+  .socials .social { padding: 10px 20px; background: color-mix(in oklab, var(--bg) 70%, transparent); border: 1px solid color-mix(in oklab, var(--p) 30%, transparent); clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); transition: transform .4s var(--ease-out), background .4s, border-color .4s; }
+  .socials .social svg { width: 28px; height: 28px; }
+  .socials .social.is-hot { transform: translateY(-8px) scale(1.08); background: color-mix(in oklab, var(--p) 35%, var(--bg)); border-color: var(--s); box-shadow: 0 0 30px var(--p); }
+  .tip { padding: 12px 32px; --cut: 12px; font-size: 22px; color: var(--soft); min-height: 52px; display: flex; align-items: center; --orbit-delay: -5s; }
+  .tip .eyebrow { margin-right: 16px; }
+</style>
+</head>
+<body>
+  <div class="bg">
+    <div class="orb orb--a"></div>
+    <div class="orb orb--b"></div>
+    <div class="beam beam--a"></div>
+    <div class="beam beam--b"></div>
+    <div class="floor"></div>
+    <div class="horizon"></div>
+    <div class="sigil">
+      <div class="sigil-pulse" style="position:absolute;inset:0">
+        <svg class="r1" viewBox="-500 -500 1000 1000"><circle r="470" stroke-width="1.5" stroke-dasharray="2 14"/><circle r="440" stroke-width="1" opacity=".5"/></svg>
+        <svg class="r2" viewBox="-500 -500 1000 1000"><circle r="400" stroke-width="10" stroke-dasharray="1 22" opacity=".8"/><circle r="380" stroke-width="2" stroke-dasharray="120 40 20 40" class="glow"/></svg>
+        <svg class="r3" viewBox="-500 -500 1000 1000"><polygon points="0,-340 294,170 -294,170" stroke-width="1.5" opacity=".6"/><polygon points="0,340 294,-170 -294,-170" stroke-width="1.5" opacity=".6"/></svg>
+        <svg class="r4" viewBox="-500 -500 1000 1000"><circle r="300" stroke-width="3" stroke-dasharray="60 30" class="glow"/><polygon points="0,-260 260,0 0,260 -260,0" stroke-width="1.5"/></svg>
+      </div>
+    </div>
+    <canvas id="field"></canvas>
+    <div class="eq" id="eq"></div>
+    <div class="noise"></div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+  </div>
+  <div class="flash" id="flash"></div>
+
+  <header class="top enter">
+    <div class="brand">
+      <div class="emblem"><i></i><i></i><i></i></div>
+      <span class="brand__name" data-bind="channel.name"></span>
+    </div>
+    <span class="clock" id="clock" data-show="layout.showClock"></span>
+  </header>
+
+  <main class="center">
+    <div class="eyebrow-row enter" style="--d:.1s"><span class="line"></span><span class="eyebrow" id="eyebrow"></span><span class="line"></span></div>
+    <h1 class="heading" id="heading"></h1>
+    <p class="sub" id="sub"></p>
+
+    <div class="timer panel enter" id="timer" style="--d:.6s" hidden>
+      <div class="timer__value" id="timerValue"></div>
+      <div class="timer__bar"><i id="timerBar"></i></div>
+      <div class="eyebrow" id="timerLabel"></div>
+    </div>
+    <div class="orbiter" id="dots" hidden><span></span><span></span><span></span></div>
+
+    <div class="next panel" id="next" hidden>
+      <span id="nextIcon"></span>
+      <div style="text-align:left">
+        <div class="eyebrow">Next stream</div>
+        <div class="next__value" data-bind="screens.ending.nextStream"></div>
+      </div>
+    </div>
+
+    <div class="playing" id="playing">
+      <div class="chip panel" data-show="layout.showGame">
+        <span id="gameIcon"></span>
+        <div>
+          <div class="chip__label" id="gameLabel">Today</div>
+          <div class="chip__value" id="game"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bottom">
+    <div class="socials" id="socials"></div>
+    <div class="tip panel" data-show="layout.showTicker"><span class="eyebrow">Info</span><span class="rotate" id="tip"></span></div>
+  </footer>
+
+  <div class="offline-note">Overlay server not running · start it with: npm run overlay</div>
+
+<script type="module">
+  import { connect, icon, remaining, formatClock, rotator, visibleSocials, socialHtml, escapeHtml } from "/shared/overlay.js";
+  import { scramble, splitLetters, particleField, every, replay, burst } from "/shared/fx.js";
+
+  const params = new URLSearchParams(location.search);
+  const mode = ["starting", "brb", "ending"].includes(params.get("mode")) ? params.get("mode") : "starting";
+  document.body.dataset.mode = mode;
+  if (params.has("bg")) document.documentElement.classList.add("preview-bg");
+
+  const $ = (id) => document.getElementById(id);
+  $("gameIcon").innerHTML = icon("gamepad");
+  $("nextIcon").innerHTML = icon("calendar");
+  $("eyebrow").textContent = { starting: "Live stream", brb: "Intermission", ending: "Stream over" }[mode];
+  $("gameLabel").textContent = mode === "ending" ? "Today we played" : "Today";
+
+  particleField($("field"), { count: mode === "ending" ? 70 : 100, speed: mode === "ending" ? .6 : 1 });
+
+  // Equalizer bars along the bottom
+  $("eq").innerHTML = Array.from({ length: 64 }, () =>
+    `<i style="--t:${(.35 + Math.random() * .7).toFixed(2)}s;--d:${(-Math.random()).toFixed(2)}s;--h:${(.25 + Math.random() * .75).toFixed(2)}"></i>`).join("");
+
+  // Lightning: a flash somewhere near the top + the heading glitches
+  every(9000, 18000, () => {
+    const flash = $("flash");
+    flash.style.setProperty("--fx", `${10 + Math.random() * 80}%`);
+    flash.style.setProperty("--fy", `${Math.random() * 40}%`);
+    replay(flash, "is-on");
+    replay($("heading"), "glitch");
+  });
+
+  // Socials take turns lighting up
+  let hot = 0;
+  setInterval(() => {
+    const items = [...$("socials").children];
+    items.forEach((el, i) => el.classList.toggle("is-hot", i === hot % items.length));
+    hot++;
+  }, 2200);
+
+  const setTip = rotator($("tip"), {
+    interval: 8000,
+    render: (t) => `<span>${escapeHtml(t)}</span>`,
+    after: (el, t) => scramble(el.firstElementChild, t, { duration: 700 }),
+  });
+
+  let state, lastHeading, lastSub, lastGame, lastDigits = "", firedZero = false;
+
+  function renderDigits(text) {
+    const box = $("timerValue");
+    if (box.children.length !== text.length) {
+      box.innerHTML = [...text].map((c) => `<span class="digit${c === ":" ? " colon" : ""}">${c}</span>`).join("");
+    } else {
+      [...text].forEach((c, i) => {
+        const d = box.children[i];
+        if (d.textContent !== c) { d.textContent = c; replay(d, "roll"); }
+      });
+    }
+    lastDigits = text;
+  }
+
+  function tick() {
+    $("clock").textContent = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    if (!state || mode === "ending") return;
+    const ms = remaining(state.countdown?.target);
+    const hasTimer = ms !== null;
+    $("timer").hidden = !hasTimer;
+    $("dots").hidden = hasTimer;
+    if (!hasTimer) { firedZero = false; return; }
+    const text = ms > 0 ? formatClock(ms) : "00:00";
+    if (text !== lastDigits) renderDigits(text);
+    const total = Math.max((Number(state.countdown?.minutes) || 10) * 60000, ms);
+    $("timerBar").style.transform = `scaleX(${ms / total})`;
+    $("timer").classList.toggle("is-final", ms > 0 && ms <= 10000);
+    $("timerLabel").textContent = ms > 0
+      ? (mode === "starting" ? "Stream starts in" : "Back in")
+      : (mode === "starting" ? "Starting now" : "Back any second");
+    if (ms === 0 && !firedZero) {
+      firedZero = true;
+      replay($("flash"), "is-on");
+      const r = $("timer").getBoundingClientRect();
+      burst(r.left + r.width / 2, r.top + r.height / 2, { count: 160, power: 14 });
+    }
+    if (ms > 0) firedZero = false;
+  }
+
+  connect({
+    onState(next) {
+      state = next;
+      const screen = state.screens?.[mode] ?? {};
+      if (screen.heading !== lastHeading) { lastHeading = screen.heading; splitLetters($("heading"), screen.heading ?? ""); }
+      if (screen.sub !== lastSub) { lastSub = screen.sub; scramble($("sub"), screen.sub ?? "", { duration: 1400 }); }
+      const game = state.stream?.game ?? "";
+      if (game !== lastGame) { lastGame = game; scramble($("game"), game, { duration: 1000 }); }
+      $("next").hidden = mode !== "ending" || !state.screens?.ending?.nextStream;
+      $("socials").innerHTML = visibleSocials(state).map(socialHtml).join("");
+      setTip(state.ticker ?? []);
+      tick();
+    },
+    onTrigger({ name }) {
+      if (name !== "replay") return;
+      document.querySelectorAll(".enter, .sub, .playing, .bottom, .next").forEach((el) => replay(el, "enter"));
+      splitLetters($("heading"), lastHeading ?? "");
+      scramble($("sub"), lastSub ?? "", { duration: 1400 });
+    },
+  });
+  setInterval(tick, 200);
+</script>
+</body>
+</html>

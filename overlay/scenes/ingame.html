@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DePhantom · In-game</title>
+<link rel="stylesheet" href="/shared/overlay.css">
+<style>
+  /* One column in the chosen corner: webcam, name plate, game, goal, ticker.
+     Webcam hole is 480×270 with a 40px margin from the canvas edges. */
+  .col {
+    position: absolute;
+    width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .col .cam { position: relative; flex: none; }
+  [data-corner="top-right"] .col { top: 40px; right: 40px; }
+  [data-corner="top-left"] .col { top: 40px; left: 40px; }
+  [data-corner="bottom-right"] .col { bottom: 40px; right: 40px; flex-direction: column-reverse; }
+  [data-corner="bottom-left"] .col { bottom: 40px; left: 40px; flex-direction: column-reverse; }
+  .cam + .plate { margin-top: 6px; }
+  [data-corner^="bottom"] .cam + .plate { margin-top: 0; margin-bottom: 6px; }
+
+  .plate { justify-content: space-between; }
+  .plate__who { display: flex; align-items: center; gap: 12px; }
+  .ticker { padding: 10px 18px; --cut: 12px; display: flex; align-items: center; gap: 14px; min-height: 46px; }
+  .ticker svg { width: 20px; height: 20px; color: var(--s); flex: none; }
+  .ticker .rotate { font-size: 16px; color: var(--soft); line-height: 1.35; }
+
+  /* Panels slide in from the screen edge, one after another */
+  .col .enter { animation-name: slide-in; }
+  [data-corner$="left"] .col .enter { --from: -60px; }
+  @keyframes slide-in { from { opacity: 0; transform: translateX(var(--from, 60px)) skewX(-6deg); filter: blur(4px); } }
+  .plate { --orbit-delay: -1s; }
+  #game { --orbit-delay: -3s; }
+  #goal { --orbit-delay: -5s; }
+  .ticker { --orbit-delay: -2s; }
+  .live { position: relative; }
+  .live::after { content: ""; position: absolute; inset: 0; border: 2px solid var(--live); clip-path: inherit; animation: live-ring 1.6s ease-out infinite; }
+  @keyframes live-ring { to { transform: scale(1.35, 1.7); opacity: 0; } }
+  .plate__name { text-shadow: none; filter: drop-shadow(0 0 10px color-mix(in oklab, var(--p) 60%, transparent)); }
+
+  /* Pop when the game changes */
+  .col .chip.is-changed { animation: pop .8s var(--ease-out); }
+  .col .goal.is-bump { animation: bump .7s var(--ease-out); }
+  .col .goal.is-reached { animation: reached 2.4s ease-in-out infinite; }
+  @keyframes pop { 30% { transform: scale(1.06); filter: brightness(1.6) drop-shadow(0 0 16px var(--s)); } }
+</style>
+</head>
+<body>
+  <div class="col" id="col">
+    <div class="cam enter" data-show="layout.showCam">
+      <div class="cam__scan"></div>
+      <div class="cam__border"></div>
+      <span class="cam__tag">Cam</span>
+      <span class="cam__corner cam__corner--tl"></span>
+      <span class="cam__corner cam__corner--tr"></span>
+      <span class="cam__corner cam__corner--bl"></span>
+      <span class="cam__corner cam__corner--br"></span>
+    </div>
+
+    <div class="plate panel enter" style="--d:.1s">
+      <div class="plate__who">
+        <span class="live">LIVE</span>
+        <span class="plate__name grad-text" id="name" data-bind="channel.name"></span>
+      </div>
+      <span class="plate__handle" data-bind="channel.handle"></span>
+    </div>
+
+    <div class="chip panel enter" id="game" style="--d:.2s" data-show="layout.showGame">
+      <span id="gameIcon"></span>
+      <div style="min-width:0">
+        <div class="chip__label">Now playing</div>
+        <div class="chip__value" id="gameName"></div>
+      </div>
+    </div>
+
+    <div class="goal panel enter" id="goal" style="--d:.3s" data-show="layout.showGoal">
+      <div class="goal__top"><span class="goal__label"></span><span class="goal__count"></span></div>
+      <div class="goal__track"><div class="goal__fill"></div></div>
+    </div>
+
+    <div class="ticker panel enter" style="--d:.4s" data-show="layout.showTicker">
+      <span id="tickIcon"></span><span class="rotate" id="tick"></span>
+    </div>
+  </div>
+
+  <div class="offline-note">Overlay server not running · start it with: npm run overlay</div>
+
+<script type="module">
+  import { connect, icon, rotator, renderGoal, escapeHtml, visibleSocials, socialHtml } from "/shared/overlay.js";
+  import { scramble, replay, burst, floatText, every } from "/shared/fx.js";
+
+  if (new URLSearchParams(location.search).has("bg")) document.documentElement.classList.add("preview-bg");
+  const $ = (id) => document.getElementById(id);
+  $("gameIcon").innerHTML = icon("gamepad");
+  $("tickIcon").innerHTML = icon("bell");
+
+  // Ticker alternates between your messages and your social handles, decoding in
+  const setTick = rotator($("tick"), {
+    interval: 9000,
+    render: (item) => (typeof item === "string" ? `<span>${escapeHtml(item)}</span>` : socialHtml(item)),
+    after: (el, item) => {
+      const span = typeof item === "string" ? el.firstElementChild : el.querySelector(".social > span");
+      scramble(span, typeof item === "string" ? item : item.handle, { duration: 800 });
+    },
+  });
+
+  // Every so often the name plate glitches
+  every(14000, 26000, () => replay($("name"), "glitch"));
+
+  let lastGame;
+  connect({
+    onState(state) {
+      document.body.dataset.corner = state.layout?.camCorner ?? "top-right";
+      const gained = renderGoal($("goal"), state);
+      if (gained > 0) {
+        // New subscriber(s): spark burst at the tip of the bar and a floating "+N"
+        replay($("goal"), "is-bump");
+        const track = $("goal").querySelector(".goal__tip").getBoundingClientRect();
+        burst(track.left + track.width / 2, track.top + track.height / 2, { count: 60, power: 7 });
+        floatText(track.left, track.top - 10, `+${gained}`);
+      }
+      setTick([...(state.ticker ?? []), ...visibleSocials(state)]);
+      const game = state.stream?.game ?? "";
+      if (game !== lastGame) {
+        scramble($("gameName"), game, { duration: 900 });
+        if (lastGame !== undefined) {
+          replay($("game"), "is-changed");
+          const r = $("game").getBoundingClientRect();
+          burst(r.left + 30, r.top + r.height / 2, { count: 40, power: 5 });
+        }
+        lastGame = game;
+      }
+    },
+  });
+</script>
+</body>
+</html>

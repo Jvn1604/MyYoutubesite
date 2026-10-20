@@ -30,3 +30,7 @@ desktop.ini
 
 # Local PGlite database
 .data/
+
+# OBS overlay live settings (defaults live in overlay/state.default.json)
+overlay/state.json
+overlay/state.json.tmp

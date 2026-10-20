@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overlay Control</title>
+<style>
+  @font-face { font-family: "Rajdhani"; font-weight: 700; src: url("/fonts/rajdhani/rajdhani-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 100 900; src: url("/fonts/inter/inter-latin-wght-normal.woff2") format("woff2"); }
+  :root {
+    color-scheme: dark;
+    --bg: #0b0b11; --card: #14141d; --field: #1c1c28; --line: #2a2a3a;
+    --text: #ececf3; --muted: #9a9ab0; --p: #a855f7; --s: #e04bff; --ok: #34d399; --bad: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 "Inter", system-ui, sans-serif; }
+  header {
+    position: sticky; top: 0; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 16px; background: color-mix(in oklab, var(--bg) 90%, transparent); border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+  }
+  h1 { margin: 0; font: 700 20px "Rajdhani", sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+  h1 span { background: linear-gradient(135deg, var(--p), var(--s)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .status { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); }
+  .status.ok::before { background: var(--ok); }
+  main { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 14px; padding: 16px; max-width: 1400px; margin: 0 auto; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px 16px; min-width: 0; }
+  h2 { margin: 0 0 12px; font: 700 15px "Rajdhani", sans-serif; letter-spacing: .16em; text-transform: uppercase; color: color-mix(in oklab, var(--p) 60%, white); }
+  h3 { margin: 14px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+  label { display: block; margin-top: 10px; font-size: 12px; color: var(--muted); }
+  label:first-of-type { margin-top: 0; }
+  input[type=text], input[type=number], input[type=url], select, textarea {
+    width: 100%; margin-top: 4px; padding: 8px 10px;
+    background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; font: inherit;
+  }
+  textarea { min-height: 110px; resize: vertical; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--p); outline-offset: 1px; }
+  .row { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+  .row > * { flex: 1; min-width: 0; }
+  .row > .shrink { flex: none; }
+  button {
+    padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--field); color: var(--text);
+    font: 600 13px "Inter", sans-serif; cursor: pointer;
+  }
+  button:hover { border-color: var(--p); }
+  button.primary { background: linear-gradient(135deg, var(--p), var(--s)); border: 0; color: #fff; }
+  button.danger:hover { border-color: var(--bad); color: var(--bad); }
+  .check { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--text); font-size: 13px; cursor: pointer; }
+  .check input { width: 16px; height: 16px; accent-color: var(--p); }
+  .big { font: 700 34px "Rajdhani", sans-serif; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+  .hint { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+  .hint code, .links code { color: var(--text); background: var(--field); padding: 1px 5px; border-radius: 4px; }
+  .links { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .links div { display: flex; align-items: center; gap: 8px; }
+  .links b { width: 104px; flex: none; font-weight: 600; }
+  .links code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+  .social-row { display: grid; grid-template-columns: 110px 1fr auto; gap: 8px; align-items: center; margin-top: 6px; }
+  .social-row input[type=text], .social-row select { margin: 0; }
+  input[type=color] { width: 100%; height: 36px; margin-top: 4px; padding: 2px; background: var(--field); border: 1px solid var(--line); border-radius: 6px; }
+  .presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .presets button { width: 34px; height: 26px; padding: 0; border: 0; }
+  .toast { position: fixed; right: 16px; bottom: 16px; padding: 8px 14px; border-radius: 6px; background: var(--card); border: 1px solid var(--line); opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  .goal-now { display: flex; align-items: center; gap: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1><span>DePhantom</span> Overlay</h1>
+  <span class="status" id="status">Connecting…</span>
+</header>
+
+<main>
+  <section>
+    <h2>Stream</h2>
+    <label>Stream title<input type="text" data-path="stream.title"></label>
+    <label>Current game<input type="text" data-path="stream.game" list="games"></label>
+    <datalist id="games">
+      <option>Elden Ring</option><option>Elden Ring Nightreign</option><option>Dark Souls III</option><option>Sekiro</option>
+      <option>Black Myth: Wukong</option><option>Lies of P</option><option>Bloodborne</option><option>Just Chatting</option>
+    </datalist>
+    <label>Just Chatting topic<input type="text" data-path="stream.topic"></label>
+    <h3>Channel</h3>
+    <div class="row">
+      <label>Name<input type="text" data-path="channel.name"></label>
+      <label>Handle<input type="text" data-path="channel.handle"></label>
+    </div>
+  </section>
+
+  <section>
+    <h2>Countdown</h2>
+    <div class="big" id="cdLeft">No timer</div>
+    <p class="hint" style="margin-top:0">Shown on Starting Soon and BRB. Without a timer they show animated dots.</p>
+    <div class="row" style="margin-top:8px">
+      <button data-minutes="2">2 min</button><button data-minutes="5">5 min</button>
+      <button data-minutes="10">10 min</button><button data-minutes="15">15 min</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <label>Custom minutes<input type="number" id="cdCustom" min="1" max="600" value="10"></label>
+      <button class="shrink primary" id="cdStart">Start</button>
+      <button class="shrink" id="cdAdd">+1 min</button>
+      <button class="shrink danger" id="cdClear">Clear</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Screens</h2>
+    <h3>Starting Soon</h3>
+    <input type="text" data-path="screens.starting.heading" aria-label="Starting heading">
+    <input type="text" data-path="screens.starting.sub" aria-label="Starting subtitle">
+    <h3>Be Right Back</h3>
+    <input type="text" data-path="screens.brb.heading" aria-label="BRB heading">
+    <input type="text" data-path="screens.brb.sub" aria-label="BRB subtitle">
+    <h3>Ending</h3>
+    <input type="text" data-path="screens.ending.heading" aria-label="Ending heading">
+    <input type="text" data-path="screens.ending.sub" aria-label="Ending subtitle">
+    <label>Next stream<input type="text" data-path="screens.ending.nextStream"></label>
+    <div class="row" style="margin-top:12px"><button id="replay">Replay intro animation</button></div>
+  </section>
+
+  <section>
+    <h2>Subscriber goal</h2>
+    <label class="check"><input type="checkbox" data-path="goal.show"> Show goal bar</label>
+    <label>Label<input type="text" data-path="goal.label"></label>
+    <div class="row">
+      <label>Start<input type="number" data-path="goal.start"></label>
+      <label>Current<input type="number" data-path="goal.current"></label>
+      <label>Target<input type="number" data-path="goal.target"></label>
+    </div>
+    <div class="goal-now" style="margin-top:8px">
+      <button data-sub="-1">−1</button><button data-sub="1">+1 sub</button><button data-sub="5">+5</button>
+    </div>
+    <h3>Automatic count</h3>
+    <label class="check"><input type="checkbox" data-path="goal.autoFromSite"> Read subscriber count from my website every 5 min</label>
+    <div class="row">
+      <label>Website URL<input type="url" data-path="goal.siteUrl"></label>
+      <button class="shrink" id="syncSubs">Sync now</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Layout</h2>
+    <label>Webcam corner (in-game)
+      <select data-path="layout.camCorner">
+        <option value="top-right">Top right</option><option value="top-left">Top left</option>
+        <option value="bottom-right">Bottom right</option><option value="bottom-left">Bottom left</option>
+      </select>
+    </label>
+    <p class="hint" id="camHint"></p>
+    <label class="check"><input type="checkbox" data-path="layout.showCam"> Webcam frame</label>
+    <label class="check"><input type="checkbox" data-path="layout.showGame"> Current game</label>
+    <label class="check"><input type="checkbox" data-path="layout.showGoal"> Goal bar</label>
+    <label class="check"><input type="checkbox" data-path="layout.showTicker"> Info ticker</label>
+    <label class="check"><input type="checkbox" data-path="layout.showClock"> Clock on full screens</label>
+  </section>
+
+  <section>
+    <h2>Ticker messages</h2>
+    <textarea id="ticker" aria-label="Ticker messages, one per line"></textarea>
+    <p class="hint">One message per line. They rotate every few seconds.</p>
+  </section>
+
+  <section>
+    <h2>Socials</h2>
+    <div id="socials"></div>
+    <div class="row" style="margin-top:10px"><button id="addSocial">Add social</button></div>
+  </section>
+
+  <section>
+    <h2>Colours</h2>
+    <div class="row">
+      <label>Primary<input type="color" data-path="theme.primary"></label>
+      <label>Secondary<input type="color" data-path="theme.secondary"></label>
+      <label>Background<input type="color" data-path="theme.background"></label>
+    </div>
+    <div class="presets" id="presets"></div>
+    <label class="check"><input type="checkbox" id="motion"> Animations</label>
+  </section>
+
+  <section>
+    <h2>OBS browser sources</h2>
+    <div class="links" id="links"></div>
+    <p class="hint">Every source: width <code>1920</code>, height <code>1080</code>. Click a row to copy.</p>
+    <div class="row" style="margin-top:12px"><button class="danger" id="reset">Reset everything to defaults</button></div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<script type="module" src="/control.js"></script>
+</body>
+</html>

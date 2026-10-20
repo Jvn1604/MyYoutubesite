@@ -1,0 +1,15 @@
+{
+  "testMessage": { "type": "button", "label": "Send test message", "group": "Test" },
+
+  "primary": { "type": "colorpicker", "label": "Primary colour", "value": "#a855f7", "group": "Look" },
+  "secondary": { "type": "colorpicker", "label": "Host colour", "value": "#e04bff", "group": "Look" },
+  "background": { "type": "colorpicker", "label": "Message background", "value": "#0a0a0f", "group": "Look" },
+  "panelOpacity": { "type": "slider", "label": "Background opacity (%)", "value": 72, "min": 0, "max": 100, "step": 1, "group": "Look" },
+  "fontSize": { "type": "number", "label": "Text size (px)", "value": 20, "min": 12, "max": 40, "group": "Look" },
+  "showRoleTags": { "type": "checkbox", "label": "Show Host / Mod / Member tags", "value": true, "group": "Look" },
+
+  "maxMessages": { "type": "number", "label": "Max messages on screen", "value": 20, "min": 3, "max": 60, "group": "Behaviour" },
+  "hideAfter": { "type": "number", "label": "Hide messages after (seconds, 0 = never)", "value": 0, "min": 0, "max": 600, "group": "Behaviour" },
+  "hideCommands": { "type": "checkbox", "label": "Hide !commands", "value": true, "group": "Behaviour" },
+  "ignoredUsers": { "type": "text", "label": "Ignore users (comma separated)", "value": "Nightbot, StreamElements", "group": "Behaviour" }
+}
