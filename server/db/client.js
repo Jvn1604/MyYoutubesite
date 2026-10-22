@@ -16,11 +16,28 @@
  */
 import { requireEnv } from "../config.js";
 
+/**
+ * Run one query at a time per connection. postgres.js pipelines concurrent queries
+ * (e.g. Promise.all) on its single connection, and Supabase's pooler hangs on
+ * pipelined requests, so we queue them instead.
+ */
+function serial() {
+  let tail = Promise.resolve();
+  return (run) => {
+    const result = tail.then(run);
+    tail = result.catch(() => {});
+    return result;
+  };
+}
+
 function wrapPostgres(sql, { closeTimeout = 5 } = {}) {
-  const api = (s) => ({
-    query: (text, params = []) => s.unsafe(text, params),
-    exec: (text) => s.unsafe(text),
-  });
+  const api = (s) => {
+    const next = serial();
+    return {
+      query: (text, params = []) => next(() => s.unsafe(text, params)),
+      exec: (text) => next(() => s.unsafe(text)),
+    };
+  };
   return {
     kind: "postgres",
     ...api(sql),
