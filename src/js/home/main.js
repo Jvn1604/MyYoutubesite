@@ -49,7 +49,7 @@ function renderLiveParts(data) {
 function renderAll(data) {
   const { settings } = data;
   applyAppearance(settings.appearance);
-  bindSettings(settings);
+  bindSettings(settings, data.channel);
   applySections($("#sections"), settings.sections);
 
   renderLiveParts(data);

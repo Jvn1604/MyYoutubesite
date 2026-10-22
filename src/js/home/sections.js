@@ -38,7 +38,17 @@ function setMeta(selector, attr, value) {
  * Fill text nodes marked data-bind="group.field" and hrefs marked data-link="key".
  * An empty value hides the element (e.g. the admin cleared the Tamil heading).
  */
-export function bindSettings(settings) {
+/**
+ * Which picture represents the creator: an uploaded logo wins; otherwise the
+ * YouTube channel avatar (from sync); the bundled placeholder is the last resort.
+ */
+export function brandImage(settings, channel) {
+  const logo = settings.brand?.logoUrl;
+  const isPlaceholder = !logo || logo.startsWith("/fallback/");
+  return isPlaceholder ? channel?.avatarUrl || logo : logo;
+}
+
+export function bindSettings(settings, channel) {
   $$("[data-bind]").forEach((el) => {
     const [group, field] = el.dataset.bind.split(".");
     if (!field) return;
@@ -52,11 +62,17 @@ export function bindSettings(settings) {
     if (url) el.href = url;
   });
 
-  const logo = settings.brand?.logoUrl;
+  const logo = brandImage(settings, channel);
   if (logo) {
     $$('img[data-bind="logo"]').forEach((img) => { img.src = logo; });
+    const hero = $('img[data-bind="avatar"]');
+    if (hero) hero.src = settings.about?.photoUrl || logo;
     const icon = document.head.querySelector('link[rel="icon"]');
-    if (icon) { icon.href = logo; icon.type = logo.endsWith(".svg") ? "image/svg+xml" : "image/webp"; }
+    if (icon) {
+      icon.href = logo;
+      // YouTube avatars have no file extension; let the browser sniff the type
+      if (logo.endsWith(".svg")) icon.type = "image/svg+xml"; else icon.removeAttribute("type");
+    }
   }
 
   // SEO for browsers/JS-capable crawlers; the server injects the same tags for link previews (phase 14)

@@ -44,7 +44,8 @@ beforeEach(async () => {
 afterEach(() => db?.close());
 
 const sync = (job, now = new Date("2026-10-16T13:30:00Z")) => runSync(db, yt, { job, channelId: CHANNEL, now });
-const payload = async () => buildSitePayload(await loadContentFromDb(db));
+// Same fixed clock as sync() so date-based rules (stale upcoming streams) don't depend on today's date
+const payload = async () => buildSitePayload({ ...(await loadContentFromDb(db)), now: Date.parse("2026-10-16T13:30:00Z") });
 
 describe("full sync", () => {
   it("imports channel stats and every upload, classified", async () => {

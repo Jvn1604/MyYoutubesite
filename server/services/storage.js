@@ -26,7 +26,9 @@ const supabase = () => {
   const base = env("SUPABASE_URL").replace(/\/$/, "");
   const key = env("SUPABASE_SERVICE_ROLE_KEY");
   const bucket = env("SUPABASE_MEDIA_BUCKET");
-  return { base, bucket, headers: { Authorization: `Bearer ${key}`, apikey: key } };
+  // New-style keys (sb_secret_…) go in `apikey` only; legacy service_role keys are JWTs and also need Authorization
+  const isJwt = key.split(".").length === 3;
+  return { base, bucket, headers: isJwt ? { Authorization: `Bearer ${key}`, apikey: key } : { apikey: key } };
 };
 
 export function publicUrl(path) {
