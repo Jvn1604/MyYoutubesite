@@ -1,5 +1,6 @@
 /* Homepage stylesheet: core design system + homepage sections, bundled into one file */
 @import "./core.css";
+@import "./worlds.css";
 
 /* Homepage sections. Uses only tokens + component classes from core.css. */
 
@@ -9,7 +10,7 @@
   min-height: min(100svh, 920px);
   display: flex;
   align-items: center;
-  padding: calc(var(--nav-height) + var(--space-12)) 0 var(--space-16);
+  padding: calc(var(--nav-height) + var(--announce-space, 0px) + var(--space-12)) 0 var(--space-16);
   overflow: hidden;
   isolation: isolate;
 }

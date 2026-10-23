@@ -22,6 +22,8 @@ import { createLibrary } from "./library.js";
 import { renderSocials, renderSupport, renderAbout } from "./community.js";
 import { videoCard, skeletonCards, emptyState, FALLBACK_THUMB } from "./templates.js";
 import { initTracking } from "./analytics.js";
+import { renderWorlds } from "./worlds.js";
+import { renderAnnounce } from "./announce.js";
 
 const LIVE_REFRESH_MS = 2 * 60 * 1000;
 const slot = (name) => $(`[data-slot="${name}"]`);
@@ -40,6 +42,7 @@ function siteUrl() {
 }
 
 function renderLiveParts(data) {
+  renderAnnounce(slot("announce"), data);
   renderHero(document, data);
   const shown = renderLatest(slot("latest"), data);
   renderFeatured(slot("featured"), data, shown);
@@ -64,12 +67,12 @@ function renderAll(data) {
   render(slot("footer-links"), data.socials.map((s) => html`<a href="${safeUrl(s.url)}" target="_blank" rel="noopener" data-track="${s.platform}_click">${s.label}</a>`));
 
   const library = $('[data-section="videos"]').hidden ? null : createLibrary($("#videos"), data);
-  renderGames({ filters: slot("game-filters"), grid: slot("games") }, data, {
-    onSelect: (slugValue) => {
-      markSelectedGame(slot("games"), slugValue);
-      library?.showGame(slugValue);
-    },
-  });
+  const showGame = (slugValue) => {
+    markSelectedGame(slot("games"), slugValue);
+    library?.showGame(slugValue);
+  };
+  renderGames({ filters: slot("game-filters"), grid: slot("games") }, data, { onSelect: showGame });
+  if (!$('[data-section="worlds"]').hidden) renderWorlds(slot("worlds"), data, { onShowVideos: showGame });
 
   enhanceImages(document, FALLBACK_THUMB);
   initReveal();
@@ -79,7 +82,7 @@ function renderFailure() {
   render(slot("hero-status"), "");
   const failure = emptyState({ title: "Couldn't load the latest content", text: "Please refresh in a moment.", iconName: "alert", error: true });
   ["latest", "streams", "games", "schedule", "socials"].forEach((name) => render(slot(name), failure));
-  ["stats", "goal", "support", "about"].forEach((name) => slot(name)?.closest("[data-section]")?.setAttribute("hidden", ""));
+  ["stats", "goal", "support", "about", "worlds"].forEach((name) => slot(name)?.closest("[data-section]")?.setAttribute("hidden", ""));
 }
 
 /** Poll for live state changes while the tab is visible (cheap: CDN-cached payload). */

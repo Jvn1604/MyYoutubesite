@@ -53,6 +53,46 @@ export function liveStatus(videos, now = Date.now()) {
   return upcoming ? { state: "upcoming", video: upcoming } : { state: "offline", video: null };
 }
 
+const WORLD_LIMIT = 5;
+const WORLD_SHOTS = 6;
+const WORLD_STATUS_RANK = { playing: 0, upcoming: 1, favourite: 2, completed: 3, dropped: 4 };
+
+/**
+ * "Game worlds" scroll story: the games with the most to show, each with its newest
+ * landscape videos (Shorts are vertical, so they don't work as full-screen scenes).
+ * Playing now comes first, then featured, then the biggest libraries.
+ */
+export function buildWorlds(games, vids) {
+  const byGame = new Map();
+  vids.forEach((v) => {
+    if (!v.game || v.kind === "short" || v.liveState === "upcoming") return;
+    if (!byGame.has(v.game.slug)) byGame.set(v.game.slug, []);
+    byGame.get(v.game.slug).push(v);
+  });
+  return games
+    .filter((g) => !g.hidden && (byGame.get(g.slug)?.length ?? 0) >= 2)
+    .sort((a, b) => (WORLD_STATUS_RANK[a.status] ?? 9) - (WORLD_STATUS_RANK[b.status] ?? 9)
+      || Number(Boolean(b.featured)) - Number(Boolean(a.featured))
+      || byGame.get(b.slug).length - byGame.get(a.slug).length)
+    .slice(0, WORLD_LIMIT)
+    .map((g) => {
+      const list = byGame.get(g.slug);
+      return {
+        slug: g.slug,
+        name: g.name,
+        status: g.status,
+        genre: g.genre ?? "",
+        description: g.description ?? "",
+        videoCount: list.length,
+        streamCount: list.filter((v) => v.kind === "stream").length,
+        shots: list.slice(0, WORLD_SHOTS).map((v) => ({
+          id: v.id, title: v.title, url: v.url, kind: v.kind, publishedAt: v.publishedAt, views: v.views,
+          durationSeconds: v.durationSeconds, thumbnails: { medium: v.thumbnails.medium, high: v.thumbnails.high, maxres: v.thumbnails.maxres },
+        })),
+      };
+    });
+}
+
 export function buildSitePayload({ settings, channel, videos, games, schedule, goal, socials, now = Date.now() }) {
   const gameIndex = new Map(games.map((g) => [g.slug, g]));
   const vids = visibleVideos(videos).map((r) => toVideoDto(r, gameIndex)).sort(byNewest);
@@ -91,6 +131,7 @@ export function buildSitePayload({ settings, channel, videos, games, schedule, g
         coverUrl: g.coverUrl || gameLatestThumb.get(g.slug) || "",
         videoCount: gameVideoCount.get(g.slug) ?? 0,
       })),
+    worlds: buildWorlds(games, vids),
     schedule: { ...schedule, rules: schedule.rules.filter((r) => r.enabled !== false) },
     goal: goal?.enabled
       ? { title: goal.title, description: goal.description, start: goal.start, target: goal.target,

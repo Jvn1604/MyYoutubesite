@@ -81,7 +81,7 @@ export const settings = {
     discord: "https://discord.gg/RdwRFEeb8K",
   },
   appearance: { primary: "#a855f7", secondary: "#e04bff", background: "#0a0a0f", radiusScale: 1, motion: "normal" },
-  sections: ["hero", "stats", "latest", "streams", "games", "schedule", "goal", "videos", "community", "support", "about"]
+  sections: ["hero", "stats", "latest", "streams", "worlds", "games", "schedule", "goal", "videos", "community", "support", "about"]
     .map((key) => ({ key, enabled: true })),
 };
 

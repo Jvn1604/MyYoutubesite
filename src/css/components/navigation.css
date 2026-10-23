@@ -2,11 +2,11 @@
 
 .site-nav {
   position: fixed;
-  inset: 0 0 auto;
+  inset: var(--announce-h, 0px) 0 auto; /* sits under the announcement strip while it's shown */
   z-index: var(--z-nav);
   height: var(--nav-height);
   border-bottom: 1px solid transparent;
-  transition: background-color var(--transition-normal), border-color var(--transition-normal);
+  transition: background-color var(--transition-normal), border-color var(--transition-normal), top var(--transition-normal);
 }
 .site-nav[data-scrolled] {
   background: var(--color-surface-overlay);
@@ -50,7 +50,7 @@
   .nav-cta { display: none; }
   .nav-links {
     position: fixed;
-    inset: var(--nav-height) 0 auto;
+    inset: calc(var(--nav-height) + var(--announce-h, 0px)) 0 auto;
     flex-direction: column;
     gap: 0;
     padding: var(--space-2) var(--gutter) var(--space-6);

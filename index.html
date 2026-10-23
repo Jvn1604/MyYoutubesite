@@ -23,6 +23,9 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
+  <!-- Live / new-video strip above the nav (filled by js/home/announce.js) -->
+  <aside class="announce" data-slot="announce" aria-label="Channel news" hidden></aside>
+
   <nav class="site-nav" aria-label="Primary">
     <div class="container site-nav__inner">
       <a class="brand" href="#top" data-track="nav_home">
@@ -33,6 +36,7 @@
         <a class="nav-link" href="#latest" data-nav="latest">Latest</a>
         <a class="nav-link" href="#streams" data-nav="streams">Streams</a>
         <a class="nav-link" href="#videos" data-nav="videos">Videos</a>
+        <a class="nav-link" href="#worlds" data-nav="worlds">Worlds</a>
         <a class="nav-link" href="#games" data-nav="games">Games</a>
         <a class="nav-link" href="#schedule" data-nav="schedule">Schedule</a>
         <a class="nav-link" href="#community" data-nav="community">Community</a>
@@ -114,6 +118,22 @@
           </div>
           <div class="auto-grid video-grid" data-slot="streams" data-skeleton-cards="6" data-stagger></div>
         </div>
+      </section>
+
+      <section class="worlds" id="worlds" data-section="worlds" aria-labelledby="worlds-title">
+        <!-- Intro statement: pinned while its lines light up one by one -->
+        <div class="worlds__intro" data-scene>
+          <div class="worlds__intro-stage container">
+            <p class="eyebrow">Game worlds</p>
+            <h2 class="worlds__statement" id="worlds-title">
+              <span class="worlds__line worlds__line--1">Every game is a world.</span>
+              <span class="worlds__line worlds__line--2 text-gradient">Every stream is a story.</span>
+            </h2>
+            <p class="worlds__line worlds__line--3 worlds__ta" lang="ta">ஒவ்வொரு கேமும் ஒரு உலகம். ஒவ்வொரு ஸ்ட்ரீமும் ஒரு கதை.</p>
+            <p class="worlds__hint" aria-hidden="true">Scroll to explore</p>
+          </div>
+        </div>
+        <div data-slot="worlds"></div>
       </section>
 
       <section class="section" id="games" data-section="games" aria-labelledby="games-title">

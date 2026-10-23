@@ -8,6 +8,7 @@ const LABELS = {
   hero: ["Hero", "Name, live status, buttons"], stats: ["Channel stats", "Subscribers, views, videos"],
   latest: ["Latest", "Latest upload and livestream"], streams: ["Recent streams", "Newest finished streams"],
   videos: ["Video library", "All videos with filters and search"], games: ["Games", "Game library cards"],
+  worlds: ["Game worlds", "Cinematic scroll story of your top games"],
   schedule: ["Schedule", "Weekly schedule and next stream"], goal: ["Subscriber goal", "Progress bar"],
   community: ["Community", "Social links"], support: ["Support", "Membership, Super Chat"], about: ["About", "Creator profile"],
 };

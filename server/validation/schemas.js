@@ -32,7 +32,7 @@ export const changePasswordSchema = z.object({
 }).strict();
 
 // ---------------------------------------------------------------- site settings (one schema per key)
-export const SECTION_KEYS = ["hero", "stats", "latest", "streams", "games", "schedule", "goal", "videos", "community", "support", "about"];
+export const SECTION_KEYS = ["hero", "stats", "latest", "streams", "worlds", "games", "schedule", "goal", "videos", "community", "support", "about"];
 
 const cta = z.object({
   key: z.enum(["latest", "live", "subscribe", "discord", "custom"]),

@@ -18,8 +18,8 @@ const videoRow = (id, extra = "") =>
 
 describe("migrations", () => {
   it("records applied migrations and is a no-op the second time", async () => {
-    const rows = await db.query("select version, file from schema_migrations");
-    expect(rows).toEqual([{ version: "001", file: "001_init.sql" }]);
+    const rows = await db.query("select version, file from schema_migrations order by version");
+    expect(rows).toEqual([{ version: "001", file: "001_init.sql" }, { version: "002", file: "002_worlds_section.sql" }]);
     expect(await migrate(db)).toEqual([]);
   });
 
